@@ -1,0 +1,93 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.InputSystem;
+using TMPro;
+
+public class ToolboxLogik : MonoBehaviour //,IInteractable
+{
+    public string InteractMassege => objectInteractMessage;
+    [SerializeField] public TextMeshProUGUI _frontText; // Serialisierung für Framework-Ebene
+    [SerializeField] string objectInteractMessage;
+    [SerializeField] private int depthLevel;
+    private BaseComponent insertIntoThisBasecomponent;
+
+     [SerializeField] private GameObject componenteLevel0;
+     [SerializeField] private GameObject componenteLevel1;
+     [SerializeField] private GameObject componenteLevel2;
+     [SerializeField] private GameObject componenteLevelPerson;
+
+    private IInteractable interactableObj;
+    private BaseComponent baseComponent;
+    // Start is called before the first frame update
+
+    public TextMeshProUGUI frontText => _frontText;
+    private int count = -6;
+
+    //public last Component entered 
+    
+    public void Interact()
+    {
+      //je nach LAyer inder man sich befindet, einenandere komponenete spawnen.
+       SpawnPrefab(depthLevel);
+        
+    }
+    // Die Signatur muss zum Event-System des XRI passen
+    public void SetParentBasecomponent(BaseComponent newBase)
+    {
+        if(newBase != null) insertIntoThisBasecomponent = newBase;
+    }
+    public void addOneDepthLevel()
+    {
+        depthLevel++;
+        Debug.Log($"Player ist jetzt in Tiefe: {depthLevel}");
+    }
+
+    public void subtractOneDepthLevel()
+    {
+        depthLevel--;
+        Debug.Log($"Player ist jetzt in Tiefe: {depthLevel}");
+    }
+
+    public void SpawnPrefab(int componente)
+    {
+        GameObject initObject = null;
+
+        switch (componente)
+        {
+        
+            /*case 0: 
+                initObject = Instantiate(componenteLevel0);
+                var scipt = initObject.GetComponent<ComponentObjectInteracable>();
+                interactableObj = initObject.GetComponent<IInteractable>();
+                break;*/
+            case 0: 
+                Debug.Log("case 1 ausgeführt");
+                count = count+8;
+                initObject = Instantiate(componenteLevel0);
+                baseComponent = initObject.GetComponent<BaseComponent>();
+                baseComponent.SetPosition(new Vector3(count, 2.5f , 0));
+                baseComponent.Initiate();
+                break;
+            case 1:
+                Debug.Log("case 2 ausgeführt. Parent: " + insertIntoThisBasecomponent.gameObject.name + "componente: "+ componente + " echt: " + depthLevel);
+                count = count+8;
+                initObject = Instantiate(componenteLevel1, insertIntoThisBasecomponent.gameObject.transform);
+                //initObject.transform.localPosition = Vector3.zero;
+                baseComponent = initObject.GetComponent<BaseComponent>();
+                baseComponent.SetPosition(new Vector3(0, 0 , 0));
+                baseComponent.SetScale(0.2f);
+                baseComponent.Initiate();
+                break;
+            case 11: break;
+            case 12: break;
+            
+            default:
+                break;
+        }
+
+        initObject?.SetActive(true);
+
+    }
+}
