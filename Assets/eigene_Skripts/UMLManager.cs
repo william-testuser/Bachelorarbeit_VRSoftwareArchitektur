@@ -8,6 +8,7 @@ public class UMLManager : MonoBehaviour
     public static UMLManager Instance { get; private set; }
     // Die zentrale Liste aller UML-Elemente
     public List<BaseComponent> AlleKomponenten = new List<BaseComponent>();
+    [SerializeField] private Canvas canvas;
 
     public void RegistriereKomponente(BaseComponent comp)
     {
@@ -46,5 +47,20 @@ public class UMLManager : MonoBehaviour
                 comp.gameObject.SetActive(true);
             }
         }
+    }
+    public void UpdateInfoScreen(BaseComponent baseComponenet)
+    {
+        SetActivationInfoScreen(true);
+        VRTextEditor editor =canvas.GetComponentInChildren<VRTextEditor>(true);
+        editor.UpdateInputFields(baseComponenet.ReadInformationNode(1), "Dummy", "Dummy Dummy Dummy");
+
+    }
+    public void SetActivationInfoScreen(bool activity)
+    {
+        canvas.gameObject.SetActive(activity);
+    }
+    public void UpdateBaseComponent(BaseComponent basecomponent)
+    {
+        //basecomponent.UpdateInfoNode(string...);
     }
 }

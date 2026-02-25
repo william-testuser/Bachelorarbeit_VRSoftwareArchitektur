@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.XR.Interaction.Toolkit;
 
 //bekommt einen Float test und der wir immer zur bamera gedreht (mehrspeiler...)
 //update oder bei spielerbewegung... und aufwand?
@@ -177,6 +178,7 @@ public abstract class BaseComponent : MonoBehaviour
         }
     }
     
+
     // hier noch viel ändern
   
     public string ReadInformationNode(int infoNummer)

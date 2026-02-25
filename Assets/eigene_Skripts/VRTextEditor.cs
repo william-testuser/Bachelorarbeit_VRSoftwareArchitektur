@@ -3,6 +3,7 @@ using TMPro;
 
 public class VRTextEditor : MonoBehaviour
 {
+    [SerializeField] private Canvas canvas;
     private TMP_InputField inputField;
     private TouchScreenKeyboard overlayKeyboard;
 
@@ -24,8 +25,17 @@ public class VRTextEditor : MonoBehaviour
     public void SetInputField(TMP_InputField newInputField)
     {
         inputField = newInputField;
+        //neue tastatur aktivieren?
+    }
+    public void UpdateInputFields(string name, string responsability, string description)
+    {
+        
     }
 
+    public void CloseInfoScreen()
+    {
+        canvas.gameObject.SetActive(false);
+    }
     //get die texte
     //updaten der texte
     
