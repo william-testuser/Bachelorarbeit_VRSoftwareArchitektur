@@ -4,13 +4,17 @@ using TMPro;
 public class VRTextEditor : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
-    private TMP_InputField inputField;
+    [SerializeField] private TMP_InputField inputFieldname;
+    [SerializeField] private TMP_InputField inputFieldResponability;
+    [SerializeField] private TMP_InputField inputFieldDescription;
+    [SerializeField] private TextMeshProUGUI componentName;
     private TouchScreenKeyboard overlayKeyboard;
+    [SerializeField] private Canvas canvasObject;
 
     public void OpenKeyboard()
     {
         // Öffnet das systemeigene VR-Keyboard (Quest/SteamVR)
-        overlayKeyboard = TouchScreenKeyboard.Open(inputField.text, TouchScreenKeyboardType.Default);
+        //overlayKeyboard = TouchScreenKeyboard.Open(inputField.text, TouchScreenKeyboardType.Default);
     }
 
     void Update()
@@ -18,26 +22,42 @@ public class VRTextEditor : MonoBehaviour
         if (overlayKeyboard != null && overlayKeyboard.active)
         {
             // Übertrage den getippten Text live in das InputField
-            inputField.text = overlayKeyboard.text;
+            inputFieldname.text = overlayKeyboard.text;
         }
     }
 
     public void SetInputField(TMP_InputField newInputField)
     {
-        inputField = newInputField;
+        inputFieldname = newInputField;
         //neue tastatur aktivieren?
     }
     public void UpdateInputFields(string name, string responsability, string description)
     {
-        
+
+        inputFieldname.text = name;
+        inputFieldResponability.text = responsability;
+        inputFieldDescription.text = description;
+        componentName.text = name;
+
+        //restliche Felder
     }
 
     public void CloseInfoScreen()
     {
-        canvas.gameObject.SetActive(false);
+        //componentName.text = "Dummy";
+        if(canvas == null) Debug.Log("canvas = Null");
+        else Debug.Log("canvas = "+ canvas.name);
+        Debug.Log("close Screen canvasUI" + canvasObject.name + canvas.name);
+        //canvas.gameObject.SetActive(false);
+        canvasObject.gameObject.SetActive(false);
     }
-    //get die texte
-    //updaten der texte
+    
+    public void ClickUpdateButton()
+    {
+        UMLManager.Instance.UpdateBaseComponent(inputFieldname.text, inputFieldResponability.text, inputFieldDescription.text);
+        componentName.text = inputFieldname.text;
+    }
+    
     
 
 }

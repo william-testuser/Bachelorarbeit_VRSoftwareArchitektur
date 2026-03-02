@@ -6,14 +6,29 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/SampleScene_1.unity
     guid: 55daccc09a3b69647bbab145b54a3ab3
-  - enabled: 1
-    path: Assets/KompoentScene.unity
-    guid: bf267d59041ad40e5a644b87e6f8c125
-  - enabled: 1
+  - enabled: 0
+    path: Assets/Samples/XR Interaction Toolkit/3.1.2/XR Device Simulator/new trail.unity
+    guid: 4424d4aac2c6e4a72bab8ae4cf8cb6aa
+  - enabled: 0
     path: Assets/StartBildschirn.unity
     guid: efca99d97e0ac445bbed62ee28be9ea5
+  - enabled: 0
+    path: Assets/KompoentScene.unity
+    guid: bf267d59041ad40e5a644b87e6f8c125
+  - enabled: 0
+    path: Assets/Samples/XR Interaction Toolkit/3.1.2/Spatial Keyboard/KeyboardDemo.unity
+    guid: ad3bc6be3dfc6fe4c93410327d58b369
+  - enabled: 0
+    path: Assets/Scenes/SampleScene_1 Kopie.unity
+    guid: 870f2f26c15cc4270a269232a4fd6e3c
+  - enabled: 1
+    path: Assets/KomponentenScene1.4.unity
+    guid: 63c32c1c9011343b8986470ecfe2ae22
+  - enabled: 0
+    path: Assets/testScene.unity
+    guid: b4f2b3ff6ff394015bd436cfee801cae
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bfa1182bd221b4ca89619141f66f1260, type: 2}
     Unity.XR.WindowsMR.Settings: {fileID: 11400000, guid: dc5a169419fa04987b057f65238cf3ba, type: 2}

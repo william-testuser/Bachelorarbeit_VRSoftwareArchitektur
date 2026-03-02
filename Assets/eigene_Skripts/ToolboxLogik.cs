@@ -11,6 +11,7 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
     [SerializeField] public TextMeshProUGUI _frontText; // Serialisierung für Framework-Ebene
     [SerializeField] string objectInteractMessage;
     [SerializeField] private int depthLevel;
+    private bool enteredFakeLevel = false;
     private BaseComponent insertIntoThisBasecomponent;
 
      [SerializeField] private GameObject componenteLevel0;
@@ -40,18 +41,21 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
     }
     public void addOneDepthLevel()
     {
-        depthLevel++;
+        if(depthLevel<=3) depthLevel++;
+        else enteredFakeLevel = true;
         Debug.Log($"Player ist jetzt in Tiefe: {depthLevel}");
     }
 
     public void subtractOneDepthLevel()
     {
-        depthLevel--;
+        if(!enteredFakeLevel) depthLevel--;
+        enteredFakeLevel = false;
         Debug.Log($"Player ist jetzt in Tiefe: {depthLevel}");
     }
 
     public void SpawnPrefab(int componente)
     {
+        Debug.Log("spawned executed");
         GameObject initObject = null;
 
         switch (componente)
@@ -80,6 +84,27 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
                 baseComponent.SetScale(0.2f);
                 baseComponent.Initiate();
                 break;
+            case 2: 
+                Debug.Log("case 3 ausgeführt. Parent: " + insertIntoThisBasecomponent.gameObject.name + "componente: "+ componente + " echt: " + depthLevel);
+                count = count+8;
+                initObject = Instantiate(componenteLevel1, insertIntoThisBasecomponent.gameObject.transform);
+                //initObject.transform.localPosition = Vector3.zero;
+                baseComponent = initObject.GetComponent<BaseComponent>();
+                baseComponent.SetPosition(new Vector3(0, 0 , 0));
+                baseComponent.SetScale(0.2f);
+                baseComponent.Initiate();
+                break;
+            case 3: 
+                Debug.Log("case 4 ausgeführt. Parent: " + insertIntoThisBasecomponent.gameObject.name + "componente: "+ componente + " echt: " + depthLevel);
+                count = count+8;
+                initObject = Instantiate(componenteLevel1, insertIntoThisBasecomponent.gameObject.transform);
+                //initObject.transform.localPosition = Vector3.zero;
+                baseComponent = initObject.GetComponent<BaseComponent>();
+                baseComponent.SetPosition(new Vector3(0, 0 , 0));
+                baseComponent.SetScale(0.2f);
+                baseComponent.Initiate();
+                break;
+
             case 11: break;
             case 12: break;
             

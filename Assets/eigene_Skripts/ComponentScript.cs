@@ -13,7 +13,13 @@ public class Component : BaseComponent
     // Update is called once per frame
     void Update()
     {
-        
+         if (GetRayHover())
+        {
+            //Debug.Log("updated");
+            if(rightTriggerAction.action.triggered) CallDadToDoTheWork();
+        }
+        // Sanftes Anpassen der Größe (Interpolation)
+        //transform.localScale = Vector3.Lerp(transform.localScale, _currentGoal, Time.deltaTime * speed);
     }
     
 }

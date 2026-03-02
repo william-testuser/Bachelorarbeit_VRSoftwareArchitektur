@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.XR.Interaction.Toolkit;
+
 
 public class VRFlySystem : MonoBehaviour
 {
@@ -10,6 +12,10 @@ public class VRFlySystem : MonoBehaviour
     [SerializeField] public CharacterController characterController;
     private int count;
 
+    [Header("Interaktions-Referenzen")]
+    [SerializeField] private XRInteractionManager interactionManager;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor leftHandInteractor;
+    [SerializeField] private UnityEngine.XR.Interaction.Toolkit.Interactors.XRBaseInteractor rightHandInteractor;
 
     void OnEnable()
     {
@@ -34,20 +40,41 @@ public class VRFlySystem : MonoBehaviour
         // Wir lesen den Vector2 vom rechten Stick
         Vector2 inputRight = rightJoystickAction.action.ReadValue<Vector2>();
         Vector2 inputLeft = leftJoystickAction.action.ReadValue<Vector2>();
-        //Debug.Log(rightJoystickAction.name + " " + inputRight.y + " enabled: " + rightJoystickAction.action.enabled);
-        //Debug.Log(leftJoystickAction.name + " " + inputLeft.y +" " + inputLeft.x);
-        // input.y ist oben/unten am Stick
+        
+        /* input.y ist oben/unten am Stick
         if (Mathf.Abs(inputRight.y) > 0.1f)
         {
             // Wir bewegen den gesamten XR Origin nur auf der Y-Achse
             characterController.Move(Vector3.up * inputRight.y * flySpeed * Time.deltaTime);
-            //xrOriginTransform.position += Vector3.up * inputRight.y * flySpeed * Time.deltaTime;
-            // inputLeft ist ein Vector2 vom linken Stick
-            Vector3 moveDirection = new Vector3(inputLeft.x, 0, inputLeft.y);
+                 
+        }*/
 
-            // Anwendung auf die Position
-            //xrOriginTransform.position += moveDirection * flySpeed * Time.deltaTime;       
+        // 1. Prüfen, ob ÜBERHAUPT etwas gegriffen ist (Globaler Check)
+        if (IsSomethingSelected()) return;
+
+        // 2. Deine Flug-Logik
+        
+        if (Mathf.Abs(inputRight.y) > 0.1f)
+        {
+            characterController.Move(Vector3.up * inputRight.y * flySpeed * Time.deltaTime);
         }
 
+    }
+    private bool IsSomethingSelected()
+    {
+        // Wir holen uns alle aktiven Interaktoren vom Manager
+        // Und prüfen, ob einer davon ein Objekt "selektiert" hat
+        /*var interactors = interactionManager.activeInteractors;
+        foreach (var interactor in interactors)
+        {
+            if (interactor.hasSelection) return true;
+            
+            // UI-Check: Wenn der Interactor ein UI-Treffer hat
+            if (interactor is IXRRayInteractor rayInteractor)
+            {
+                if (rayInteractor.TryGetCurrentUIRaycastResult(out _)) return true;
+            }
+        }*/
+        return false;
     }
 }

@@ -21,7 +21,7 @@ public class UMLAnchor : MonoBehaviour
     }
     void Start()
     {
-        parentComponent = GetComponentInParent<BaseComponent>();
+        parentComponent = this.transform.parent.GetComponentInParent<BaseComponent>();
         // Sicherstellen, dass der Layer auf "Ignore Raycast" steht, 
         // falls der Ray nur die Box treffen soll, oder "Interactable"
     }

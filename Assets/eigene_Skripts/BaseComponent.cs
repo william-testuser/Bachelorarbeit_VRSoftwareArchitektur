@@ -2,27 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 
 //bekommt einen Float test und der wir immer zur bamera gedreht (mehrspeiler...)
 //update oder bei spielerbewegung... und aufwand?
 public abstract class BaseComponent : MonoBehaviour
 {
+    [Header("Basics")]
     private InformationNode infoNode;
     private List<BaseComponent> nachbarKomponenten;
     [SerializeField] public TextMeshProUGUI frontText;
-
-     private bool isExplored = false;
+    [SerializeField] protected InputActionReference rightTriggerAction;
     [SerializeField] protected List<BaseComponent> childComponents = new List<BaseComponent>();
-
+    private string id;
+    private int count = 0;
+    [SerializeField] public string playerTagName;
+    private bool rayHover = false;
 
     [Header("Visuals")]
     public MeshRenderer shellRenderer;
     public Material solidMaterial;
     public Material glassMaterial;
-    private string id;
-    private int count = 0;
-    [SerializeField] public string playerTagName;
+    
 
 
     [Header("Heatmap Settings")]
@@ -30,6 +32,17 @@ public abstract class BaseComponent : MonoBehaviour
     public Color baseColor = Color.white;
     public int complexityThreshold = 10; // Ab wie vielen Gesamt-Kindern ist es maximal rot?
     //vergrößerung der Componenete Funktion, kleinen
+
+    [Header("ScalerSettings")]
+    [SerializeField] protected Vector3 targetScale = new Vector3(1.2f, 1.2f, 1.2f); // 20% größer
+    [SerializeField] protected float speed = 5f; // Wie schnell skaliert es?
+
+    protected Vector3 _originalScale;
+    protected Vector3 _currentGoal;
+
+    [Header("trigger")]
+    [SerializeField] private BoxCollider interactionCollider;
+    private int _playerInZoneCount = 0;
 
     public void UpdateVisualHeatmap()
     {
@@ -66,9 +79,11 @@ public abstract class BaseComponent : MonoBehaviour
 
 
 
-  public void Initiate()
+    public void Initiate()
     { 
         Debug.Log("new Komponent initiated");
+
+
         infoNode = new InformationNode();
         nachbarKomponenten = new List<BaseComponent>();
         childComponents = new List<BaseComponent>();
@@ -78,6 +93,14 @@ public abstract class BaseComponent : MonoBehaviour
         float cubeSizeZ = transform.localScale.z;
         float zPos = -0.5f -(0.01f/cubeSizeZ); 
         frontText.transform.localPosition = new  Vector3(0,0,zPos);
+
+        //zum dynamic zoom
+        _originalScale = transform.localScale;
+        _currentGoal = _originalScale;
+
+        //nicht dauerhaft triggern im Cube
+        if (interactionCollider == null) interactionCollider = GetComponent<BoxCollider>();
+
         //farbe und material setzen
         if (shellRenderer != null)
         {
@@ -102,21 +125,6 @@ public abstract class BaseComponent : MonoBehaviour
         }
     }
 
-    // --- TEIL 1: Fokus setzen (Hülle wird Glas, Kinder erscheinen) ---
-    public void ToggleExpansion()
-    {
-        isExplored = !isExplored;
-        
-        // Hülle wechseln
-        shellRenderer.material = isExplored ? glassMaterial : solidMaterial;
-
-        // Kinder aktivieren/deaktivieren
-        foreach (var child in childComponents)
-        {
-            child.gameObject.SetActive(isExplored);
-        }
-    }
-
     // --- TEIL 2: Betreten der Box (Außenwelt ausblenden) ---
     // Voraussetzung: Die Box hat einen BoxCollider mit "Is Trigger = true"
     private void OnTriggerEnter(Collider other)
@@ -126,10 +134,16 @@ public abstract class BaseComponent : MonoBehaviour
         
         if (other.CompareTag(playerTagName)) // Prüft ob der Kopf des Nutzers eintritt
         {
+            _currentGoal = targetScale;
+
+            interactionCollider.isTrigger = true;
 
             EnterWorkMode();
             toolbox = other.GetComponentInChildren<ToolboxLogik>();
             toolbox.SetParentBasecomponent(this);
+
+            interactionCollider.isTrigger = false;
+
             if(toolbox != null) 
             {
                 Debug.Log("toolbox object: " + toolbox.gameObject.name);
@@ -148,6 +162,8 @@ public abstract class BaseComponent : MonoBehaviour
         ToolboxLogik toolbox;
         if (other.CompareTag(playerTagName))
         {
+            _currentGoal = _originalScale;
+
             ExitWorkMode();
             toolbox = other.GetComponentInChildren<ToolboxLogik>();
             toolbox.subtractOneDepthLevel();
@@ -156,18 +172,20 @@ public abstract class BaseComponent : MonoBehaviour
         }
     }
    
-
+ 
     private void EnterWorkMode()
     {
         // Blende alles aus, was nicht dieses Objekt oder ein Kind davon ist
         UMLManager.Instance.SetGlobalVisibility(false, this);
+        //UMLConnectionBuilder.Instance.SetGlobalVisibility(false, this);
         SetMaterial(glassMaterial);
-        Debug.Log("Arbeitsmodus aktiviert: Fokus auf " + gameObject.name);
+        Debug.Log("Arbeitsmodus aktiviert: Fokus auf " + gameObject.name + "(" + frontText + ")");
     }
 
     private void ExitWorkMode()
     {
         UMLManager.Instance.SetGlobalVisibility(true, null);
+        //UMLConnectionBuilder.Instance.SetGlobalVisibility(true, null);
         SetMaterial(solidMaterial);
         
         // Tipp: Hier rufen wir das Singleton auf
@@ -177,9 +195,6 @@ public abstract class BaseComponent : MonoBehaviour
             Debug.Log("Auto-Save beim Verlassen der Komponente ausgeführt.");
         }
     }
-    
-
-    // hier noch viel ändern
   
     public string ReadInformationNode(int infoNummer)
     {
@@ -190,14 +205,26 @@ public abstract class BaseComponent : MonoBehaviour
 
         switch (infoNummer)
         {
-            case 1: return infoNode.Discription;
-            case 2: return infoNode.Responsibility;
+            case 1: return infoNode.name;
+            case 2: return infoNode.discription;
+            case 3: return infoNode.responsibility;
 
         }
 
         return infoNode.BuildText();
     }
-
+    
+    //updated auch den namen...
+    public void UpdateInfoNode(string name, string responability, string description)
+    {
+        frontText.text = name;
+        if(infoNode != null)
+        {
+            infoNode.name = name;
+            infoNode.discription = description;
+            infoNode.responsibility = responability;
+        }
+    }
     public string getId()
     {
         return id;
@@ -227,5 +254,24 @@ public abstract class BaseComponent : MonoBehaviour
     public void SetScale(float scale)
     {
         transform.localScale = Vector3.one * scale;
+    }
+    public void CallDadToDoTheWork()
+    {
+        Debug.Log("called Dad");
+        UMLManager.Instance.UpdateInfoScreen(this);
+    }
+    public void RayHoveringTrue()
+    {
+        Debug.Log("rayon");
+        rayHover = true;
+    }
+    public void RayHoveringFalse()
+    {
+        Debug.Log("rayoff");
+        rayHover= false;
+    }
+    public bool GetRayHover()
+    {
+        return rayHover;
     }
 }
