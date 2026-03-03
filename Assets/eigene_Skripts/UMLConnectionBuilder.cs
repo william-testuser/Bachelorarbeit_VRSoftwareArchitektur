@@ -6,12 +6,13 @@ public class UMLConnectionBuilder : MonoBehaviour
 {
     public static UMLConnectionBuilder Instance { get; private set; }
     public UMLAnchor firstAnchor;
-    public GameObject linePrefab; // Ein Prefab mit dem UMLLineController
-    public LineRenderer previewLine; // Eine visuelle Linie während des Ziehens
+    [SerializeField] private GameObject linePrefab; // Ein Prefab mit dem UMLLineController
+    [SerializeField] private LineRenderer previewLine; // Eine visuelle Linie während des Ziehens
+    [SerializeField] private GameObject previewConenction;
     
     public InputActionReference cancelActionLeft;
     public InputActionReference cancelActionRight; 
-    private List<UMLLineController> AllConnections;
+    private List<UMLLineController> AllConnections = new List<UMLLineController>();
 
      void Awake()
     {
@@ -25,23 +26,29 @@ public class UMLConnectionBuilder : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    void Start()
+    {
+       
+    }
 
     public void SetGlobalVisibility(bool visible, BaseComponent focusObject)
     {
         // Finde alle BaseComponents in der Szene
         UMLLineController[] allConns = FindObjectsOfType<UMLLineController>(true);
         Debug.Log("SetGlobalVisibility ausgeführt, gefundene UMLConnectionController: " + allConns.Length);
-        foreach (var comp in allConns)
+        if(allConns == null) return;
+        foreach (var cons in allConns)
         {
+            if(cons.transform == previewConenction.GetComponent<UMLLineController>().transform) continue;
             // beide parents der anchor suchen wenn beide gleich und
-            if (!visible && comp.anchorA.transform.parent != comp.anchorB.transform.parent 
-                && !comp.anchorA.transform.parent == focusObject.transform)
+            if (!visible && !(cons.anchorA.IsChildOf(focusObject.transform) 
+                && cons.anchorB.IsChildOf(focusObject.transform)))
             {
-                comp.gameObject.SetActive(false);
+                cons.gameObject.SetActive(false);
             }
             else
             {
-                comp.gameObject.SetActive(true);
+                cons.gameObject.SetActive(true);
             }
         }
     }
@@ -76,7 +83,8 @@ public class UMLConnectionBuilder : MonoBehaviour
             previewLine.enabled = true;
             previewLine.SetPosition(0, firstAnchor.transform.position);
         }
-        else if (firstAnchor == selectedAnchor)
+        else if (firstAnchor == selectedAnchor || firstAnchor.transform.IsChildOf(selectedAnchor.transform.parent)
+            || selectedAnchor.transform.IsChildOf(firstAnchor.transform.parent))
         {
             // ABBRUCH: Zweimal den gleichen Anker gewählt
             CancelConnection();
@@ -85,6 +93,8 @@ public class UMLConnectionBuilder : MonoBehaviour
         {
             // SCHRITT 2: Zweiten Anker wählen und verbinden
             FinalizeConnection(selectedAnchor);
+            
+            //CancelConnection();
         }
     }
 
@@ -93,9 +103,11 @@ public class UMLConnectionBuilder : MonoBehaviour
         GameObject newConnection = Instantiate(linePrefab);
         UMLLineController controller = newConnection.GetComponent<UMLLineController>();
         controller.AssignAnchors(firstAnchor.transform, secondAnchor.transform);
-        
+        Debug.Log("FinalizeConnection abgeschlossen");
+
         // In Listen eintragen
-        AllConnections.Add(controller);
+        //AllConnections.Add(controller);
+        Debug.Log(AllConnections.Count);
 
         CancelConnection(); // Reset für die nächste Verbindung
     }
@@ -107,12 +119,13 @@ public class UMLConnectionBuilder : MonoBehaviour
 
         // Die Vorschau-Linie geht vom ersten Anker bis zur Hand (oder Ray-Ende)
         previewLine.SetPosition(0, firstAnchor.transform.position);
-        //alternativ die position auf irendwas setzen was getracked wird z.B. hand etc. transform.position
+        //alternativ die position auf irendwas setzen was getracked wird z.B. hand das ende vom ray
         previewLine.SetPosition(1, transform.position); 
     }
 
     void CancelConnection()
     {
+        Debug.Log("cancel ausgeführt");
         firstAnchor = null;
         previewLine.enabled = false;
     }

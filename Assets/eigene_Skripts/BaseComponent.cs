@@ -30,6 +30,7 @@ public abstract class BaseComponent : MonoBehaviour
     [Header("Heatmap Settings")]
     //Shellrenderer in Visuals
     public Color baseColor = Color.white;
+    private MaterialPropertyBlock _propBlock;
     public int complexityThreshold = 10; // Ab wie vielen Gesamt-Kindern ist es maximal rot?
     //vergrößerung der Componenete Funktion, kleinen
 
@@ -44,24 +45,28 @@ public abstract class BaseComponent : MonoBehaviour
     [SerializeField] private BoxCollider interactionCollider;
     private int _playerInZoneCount = 0;
 
+    /**
+    gür übergroße Kinderkomponenten hell dunel einstellung nutzen
+    je nach menge der Komponenten als Kinder einer Komponente ändert dieser die Farbe ab einem schwellenert
+    */
     public void UpdateVisualHeatmap()
     {
-        // 1. Berechne die totale Anzahl aller Nachfahren (Kinder, Kindeskinder...)
-        int totalComplexity = GetTotalChildCount();
-        float factor = 0.0f;
-        // 2. Berechne den Faktor (0.0 bis 1.0)
-        if(totalComplexity>4) factor = Mathf.Clamp01((float)totalComplexity / complexityThreshold);
+    //if (_propBlock == null) _propBlock = new MaterialPropertyBlock();
+    
+    int totalComplexity = childComponents.Count;
+    Debug.Log(totalComplexity);
+    float factor = (totalComplexity > 4) ? Mathf.Clamp01((float)totalComplexity / complexityThreshold) : 0f;
+    Color heatColor = Color.Lerp(baseColor, Color.red, factor);
 
-        // 3. Farbe mischen: Von Weiß/Blau stufenweise zu Rot
-        // Color.Lerp mischt zwei Farben basierend auf dem Faktor
-        Color heatColor = Color.Lerp(baseColor, Color.red, factor);
-
-        // 4. Farbe zuweisen
-        if (shellRenderer != null)
-        {
-            shellRenderer.material.color = heatColor;
-        }
+    if (shellRenderer != null)
+    {
+        // Holt aktuelle Werte, setzt die Farbe, schiebt sie zurück
+        //shellRenderer.GetPropertyBlock(_propBlock);
+        //_propBlock.SetColor("_Color", heatColor); // "_Color" ist der Standard-Name im Shader
+        //shellRenderer.SetPropertyBlock(_propBlock);
+        solidMaterial.color = heatColor;
     }
+}
 
     // Diese Funktion fragt rekursiv alle Unterebenen ab
     public int GetTotalChildCount()
@@ -83,7 +88,10 @@ public abstract class BaseComponent : MonoBehaviour
     { 
         Debug.Log("new Komponent initiated");
 
+        Shader defaultShader = Shader.Find("Universal Render Pipeline/Lit");
+        if (defaultShader == null) defaultShader = Shader.Find("Standard");
 
+        solidMaterial = new Material(defaultShader);
         infoNode = new InformationNode();
         nachbarKomponenten = new List<BaseComponent>();
         childComponents = new List<BaseComponent>();
@@ -104,6 +112,7 @@ public abstract class BaseComponent : MonoBehaviour
         //farbe und material setzen
         if (shellRenderer != null)
         {
+            
             shellRenderer.material.color = baseColor;
         }
 
@@ -169,6 +178,7 @@ public abstract class BaseComponent : MonoBehaviour
             toolbox.subtractOneDepthLevel();
             BaseComponent parentCompoenet = this.transform.parent.GetComponent<BaseComponent>();
             if(parentCompoenet != null) toolbox.SetParentBasecomponent(parentCompoenet);
+            
         }
     }
    
@@ -177,7 +187,7 @@ public abstract class BaseComponent : MonoBehaviour
     {
         // Blende alles aus, was nicht dieses Objekt oder ein Kind davon ist
         UMLManager.Instance.SetGlobalVisibility(false, this);
-        //UMLConnectionBuilder.Instance.SetGlobalVisibility(false, this);
+        UMLConnectionBuilder.Instance.SetGlobalVisibility(false, this);
         SetMaterial(glassMaterial);
         Debug.Log("Arbeitsmodus aktiviert: Fokus auf " + gameObject.name + "(" + frontText + ")");
     }
@@ -185,8 +195,11 @@ public abstract class BaseComponent : MonoBehaviour
     private void ExitWorkMode()
     {
         UMLManager.Instance.SetGlobalVisibility(true, null);
-        //UMLConnectionBuilder.Instance.SetGlobalVisibility(true, null);
+        UMLConnectionBuilder.Instance.SetGlobalVisibility(true, null);
+        UpdateVisualHeatmap();
         SetMaterial(solidMaterial);
+        
+
         
         // Tipp: Hier rufen wir das Singleton auf
         if(SaveManager.Instance != null)
@@ -262,12 +275,12 @@ public abstract class BaseComponent : MonoBehaviour
     }
     public void RayHoveringTrue()
     {
-        Debug.Log("rayon");
+        
         rayHover = true;
     }
     public void RayHoveringFalse()
     {
-        Debug.Log("rayoff");
+        
         rayHover= false;
     }
     public bool GetRayHover()

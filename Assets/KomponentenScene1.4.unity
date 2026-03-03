@@ -360,11 +360,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 874132855180865563, guid: 81289f7c771284147a5364e38e7c39f5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.5538924
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 874132855180865563, guid: 81289f7c771284147a5364e38e7c39f5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 4.0492334
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 874132855180865563, guid: 81289f7c771284147a5364e38e7c39f5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3942,6 +3942,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 408253258}
   m_CullTransparentMesh: 1
+--- !u!1 &410847062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6775567282169404686, guid: 81289f7c771284147a5364e38e7c39f5, type: 3}
+  m_PrefabInstance: {fileID: 33071888}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &414404410
 GameObject:
   m_ObjectHideFlags: 0
@@ -6258,7 +6263,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &569802456
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -7069,8 +7074,9 @@ MonoBehaviour:
   firstAnchor: {fileID: 0}
   linePrefab: {fileID: 6775567282169404686, guid: 81289f7c771284147a5364e38e7c39f5, type: 3}
   previewLine: {fileID: 33071889}
-  cancelActionLeft: {fileID: 0}
-  cancelActionRight: {fileID: 0}
+  previewConenction: {fileID: 410847062}
+  cancelActionLeft: {fileID: -3599823989380923159, guid: 0be0028c24f2a4c14a96b6aa39055933, type: 3}
+  cancelActionRight: {fileID: -3599823989380923159, guid: b6d5c44ebe3244b7692e81ae8265eb22, type: 3}
 --- !u!4 &691123706
 Transform:
   m_ObjectHideFlags: 0
@@ -19820,7 +19826,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterController: {fileID: 2779669268269126902}
   rightJoystickAction: {fileID: -8961688065001834081, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  flySpeed: 4
+  flySpeed: 7
   leftNearFarInteractor: {fileID: 2015480825}
   rightNearFarInteractor: {fileID: 277639232}
 --- !u!1 &1912946111
@@ -24111,7 +24117,7 @@ PrefabInstance:
       objectReference: {fileID: 773144032}
     - target: {fileID: 2291735172237534479, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_InteractionLayers.m_Bits
-      value: 1073741824
+      value: 1342177280
       objectReference: {fileID: 0}
     - target: {fileID: 2291735172237534479, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_SelectExited.m_PersistentCalls.m_Calls.Array.size
@@ -24405,6 +24411,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5644493574289614242, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_CastDistance
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 5860535111124357804, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_Layer
       value: 0
@@ -24510,8 +24520,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7412079985589468698, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_MoveSpeed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412079985589468698, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_UseGravity
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7412079985589468698, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
+      propertyPath: m_EnableStrafe
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7434851320941268098, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_AnchorMax.y
@@ -24835,7 +24853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9141569775962405776, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_InteractionLayers.m_Bits
-      value: 1073741824
+      value: 1342177280
       objectReference: {fileID: 0}
     - target: {fileID: 9141569775962405776, guid: 77e7c27b2c5525e4aa8cc9f99d654486, type: 3}
       propertyPath: m_SelectExited.m_PersistentCalls.m_Calls.Array.size

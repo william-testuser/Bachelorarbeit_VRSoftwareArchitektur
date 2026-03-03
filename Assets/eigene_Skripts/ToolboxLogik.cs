@@ -24,7 +24,7 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
     // Start is called before the first frame update
 
     public TextMeshProUGUI frontText => _frontText;
-    private int count = -6;
+    private int count = 0;
 
     //public last Component entered 
     
@@ -68,7 +68,7 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
                 break;*/
             case 0: 
                 Debug.Log("case 1 ausgeführt");
-                count = count+8;
+                
                 initObject = Instantiate(componenteLevel0);
                 baseComponent = initObject.GetComponent<BaseComponent>();
                 baseComponent.SetPosition(new Vector3(count, 2.5f , 0));
@@ -76,33 +76,36 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
                 break;
             case 1:
                 Debug.Log("case 2 ausgeführt. Parent: " + insertIntoThisBasecomponent.gameObject.name + "componente: "+ componente + " echt: " + depthLevel);
-                count = count+8;
+                
                 initObject = Instantiate(componenteLevel1, insertIntoThisBasecomponent.gameObject.transform);
                 //initObject.transform.localPosition = Vector3.zero;
                 baseComponent = initObject.GetComponent<BaseComponent>();
                 baseComponent.SetPosition(new Vector3(0, 0 , 0));
                 baseComponent.SetScale(0.2f);
                 baseComponent.Initiate();
+                insertIntoThisBasecomponent.AddChild(baseComponent);
                 break;
             case 2: 
                 Debug.Log("case 3 ausgeführt. Parent: " + insertIntoThisBasecomponent.gameObject.name + "componente: "+ componente + " echt: " + depthLevel);
-                count = count+8;
+                
                 initObject = Instantiate(componenteLevel1, insertIntoThisBasecomponent.gameObject.transform);
                 //initObject.transform.localPosition = Vector3.zero;
                 baseComponent = initObject.GetComponent<BaseComponent>();
                 baseComponent.SetPosition(new Vector3(0, 0 , 0));
                 baseComponent.SetScale(0.2f);
                 baseComponent.Initiate();
+                insertIntoThisBasecomponent.AddChild(baseComponent);
                 break;
             case 3: 
                 Debug.Log("case 4 ausgeführt. Parent: " + insertIntoThisBasecomponent.gameObject.name + "componente: "+ componente + " echt: " + depthLevel);
-                count = count+8;
+                
                 initObject = Instantiate(componenteLevel1, insertIntoThisBasecomponent.gameObject.transform);
                 //initObject.transform.localPosition = Vector3.zero;
                 baseComponent = initObject.GetComponent<BaseComponent>();
                 baseComponent.SetPosition(new Vector3(0, 0 , 0));
                 baseComponent.SetScale(0.2f);
                 baseComponent.Initiate();
+                insertIntoThisBasecomponent.AddChild(baseComponent);
                 break;
 
             case 11: break;
