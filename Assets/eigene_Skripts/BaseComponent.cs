@@ -73,7 +73,6 @@ public abstract class BaseComponent : MonoBehaviour
     //if (_propBlock == null) _propBlock = new MaterialPropertyBlock();
     
     int totalComplexity = childComponents.Count;
-    Debug.Log(totalComplexity);
     float factor = (totalComplexity > 4) ? Mathf.Clamp01((float)totalComplexity / complexityThreshold) : 0f;
     Color heatColor = Color.Lerp(baseColor, Color.red, factor);
 
@@ -214,7 +213,7 @@ public abstract class BaseComponent : MonoBehaviour
     private void ExitWorkMode()
     {
         UMLManager.Instance.SetGlobalVisibility(true, null);
-        //UMLConnectionBuilder.Instance.SetGlobalVisibility(true, null);
+        UMLConnectionBuilder.Instance.SetGlobalVisibility(true, null);
         UpdateVisualHeatmap();
         SetMaterial(solidMaterial);
         

@@ -141,4 +141,9 @@ public class UMLConnectionBuilder : MonoBehaviour
     {
         return compareController.gameObject == previewLine.gameObject;
     }
+
+    public void updateConnectionInfo()
+    {
+        //über ein dropdown aufrufebn? und übergeben können? oder einzelne aber das kaka
+    }
 }

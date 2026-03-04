@@ -66,6 +66,15 @@ public class UMLManager : MonoBehaviour
     }
     public void DeleteComponent()
     {
+        List<BaseComponent> allChilden = new List<BaseComponent>();
+        foreach (BaseComponent com in AlleKomponenten)
+        {
+            if(com.transform.IsChildOf(lastComponentTriggered.transform)) allChilden.Add(com);
+        }
+        foreach (BaseComponent com in allChilden)
+        {
+            AlleKomponenten.Remove(com);
+        }
         AlleKomponenten.Remove(lastComponentTriggered);
         Destroy(lastComponentTriggered.gameObject, 0.2f);
         lastComponentTriggered = null;

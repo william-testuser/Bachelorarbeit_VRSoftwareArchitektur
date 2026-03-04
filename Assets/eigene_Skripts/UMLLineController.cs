@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class UMLLineController : MonoBehaviour
 {
-    
+    private string connectionType = Connection.Call;
     public Transform anchorA;
     public Transform anchorB;
     private LineRenderer lineRenderer;
@@ -19,7 +19,10 @@ public class UMLLineController : MonoBehaviour
         // Material sollte im Inspector zugewiesen werden (z.B. URP Unlit)
     }
     
-
+    void changeConnection(string con)
+    {
+        connectionType = con;
+    }
     void Update()
     {
         if (anchorA != null && anchorB != null)
