@@ -61,8 +61,9 @@ public class UMLManager : MonoBehaviour
     }
     public void DeleteComponent()
     {
-        Destroy(lastComponentTriggered.gameObject, 2.0f);
+        
         AlleKomponenten.Remove(lastComponentTriggered);
+        Destroy(lastComponentTriggered.gameObject, 2.0f);
     }
     public void SetActivationInfoScreen(bool activity)
     {
