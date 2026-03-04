@@ -39,6 +39,7 @@ public class UMLManager : MonoBehaviour
         //Debug.Log("SetGlobalVisibility ausgeführt, gefundene BaseComponenten: " + allComps.Length);
         foreach (var comp in allComps)
         {
+            if(comp == null) continue;
             // Wenn wir im Arbeitsmodus sind, blende alles aus außer dem Fokus-Objekt
             if (!visible && comp != focusObject && !comp.transform.IsChildOf(focusObject.transform) 
                 && !focusObject.transform.IsChildOf(comp.transform))
@@ -51,6 +52,10 @@ public class UMLManager : MonoBehaviour
             }
         }
     }
+    /**
+    die Ausgewählte komponente wird hier auch gespeichert. da wenn eine komponente ausgewählt wird auch immer der 
+    sceen ein update bekommt zusammen ausführen und auch um die ausführreinfolge zu kontrollieren
+    */
     public void UpdateInfoScreen(BaseComponent baseComponenet)
     {
         lastComponentTriggered = baseComponenet;
@@ -61,9 +66,9 @@ public class UMLManager : MonoBehaviour
     }
     public void DeleteComponent()
     {
-        
         AlleKomponenten.Remove(lastComponentTriggered);
-        Destroy(lastComponentTriggered.gameObject, 2.0f);
+        Destroy(lastComponentTriggered.gameObject, 0.2f);
+        lastComponentTriggered = null;
     }
     public void SetActivationInfoScreen(bool activity)
     {

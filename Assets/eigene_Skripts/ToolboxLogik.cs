@@ -55,9 +55,13 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
 
     public void SpawnPrefab(int componente)
     {
-        Debug.Log("spawned executed");
+        //Debug.Log("spawned executed");
         GameObject initObject = null;
-
+        if(componente>0 && insertIntoThisBasecomponent == null)
+        {
+            Debug.Log("Ebene höher als 0: " + componente + " aber kein Parent der Basekomponente ist");
+            return;
+        }
         switch (componente)
         {
         

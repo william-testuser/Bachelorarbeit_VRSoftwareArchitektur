@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
-using UnityEngine.XR.Interaction.Toolkit;
+
 
 //bekommt einen Float test und der wir immer zur bamera gedreht (mehrspeiler...)
 //update oder bei spielerbewegung... und aufwand?
@@ -43,8 +43,27 @@ public abstract class BaseComponent : MonoBehaviour
 
     [Header("trigger")]
     [SerializeField] private BoxCollider interactionCollider;
-    private int _playerInZoneCount = 0;
+    //private int _playerInZoneCount = 0;
 
+    void Awake()
+    {
+        // Hole die Referenz zum Grab Interactable
+        if (TryGetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>(out UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable interactable))
+        {
+            // 1. Die Liste der Collider leeren
+            interactable.colliders.Clear();
+
+            // 2. Deinen spezifischen Collider hinzufügen
+            if (interactionCollider != null)
+            {
+                interactable.colliders.Add(interactionCollider);
+            }
+            else
+            {
+                Debug.LogWarning("Kein interaction Collider für Awake zugewiesen!");
+            }
+        }
+    }
     /**
     gür übergroße Kinderkomponenten hell dunel einstellung nutzen
     je nach menge der Komponenten als Kinder einer Komponente ändert dieser die Farbe ab einem schwellenert
@@ -175,8 +194,9 @@ public abstract class BaseComponent : MonoBehaviour
             ExitWorkMode();
             toolbox = other.GetComponentInChildren<ToolboxLogik>();
             toolbox.subtractOneDepthLevel();
-            BaseComponent parentCompoenet = this.transform.parent.GetComponent<BaseComponent>();
-            if(parentCompoenet != null) toolbox.SetParentBasecomponent(parentCompoenet);
+            Transform myParent = this.transform.parent;
+            if(myParent != null) toolbox.SetParentBasecomponent(myParent.GetComponent<BaseComponent>());
+            else toolbox.SetParentBasecomponent(null);
             
         }
     }
@@ -194,7 +214,7 @@ public abstract class BaseComponent : MonoBehaviour
     private void ExitWorkMode()
     {
         UMLManager.Instance.SetGlobalVisibility(true, null);
-        UMLConnectionBuilder.Instance.SetGlobalVisibility(true, null);
+        //UMLConnectionBuilder.Instance.SetGlobalVisibility(true, null);
         UpdateVisualHeatmap();
         SetMaterial(solidMaterial);
         
@@ -269,7 +289,7 @@ public abstract class BaseComponent : MonoBehaviour
     }
     public void CallDadToDoTheWork()
     {
-        Debug.Log("called Dad");
+        //Debug.Log("called Dad");
         UMLManager.Instance.UpdateInfoScreen(this);
     }
     public void RayHoveringTrue()

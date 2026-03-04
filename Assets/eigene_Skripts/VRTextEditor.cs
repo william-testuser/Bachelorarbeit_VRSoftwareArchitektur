@@ -9,7 +9,7 @@ public class VRTextEditor : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldDescription;
     [SerializeField] private TextMeshProUGUI componentName;
     private TouchScreenKeyboard overlayKeyboard;
-    [SerializeField] private Canvas canvasObject;
+
 
     public void OpenKeyboard()
     {
@@ -46,10 +46,8 @@ public class VRTextEditor : MonoBehaviour
     {
         //componentName.text = "Dummy";
         if(canvas == null) Debug.Log("canvas = Null");
-        else Debug.Log("canvas = "+ canvas.name);
-        Debug.Log("close Screen canvasUI" + canvasObject.name + canvas.name);
-        //canvas.gameObject.SetActive(false);
-        canvasObject.gameObject.SetActive(false);
+        else //Debug.Log("canvas = "+ canvas.name);
+        canvas.gameObject.SetActive(false);
     }
     
     public void ClickUpdateButton()

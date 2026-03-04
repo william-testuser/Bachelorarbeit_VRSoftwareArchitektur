@@ -43,6 +43,7 @@ public class UMLConnectionBuilder : MonoBehaviour
         if(allConns == null) return;
         foreach (var cons in allConns)
         {
+            if(cons == null) continue;
             if(cons.transform == previewConenction.GetComponent<UMLLineController>().transform) continue;
             // beide parents der anchor suchen wenn beide gleich und
             if (!visible && !(cons.anchorA.IsChildOf(focusObject.transform) 
@@ -136,4 +137,8 @@ public class UMLConnectionBuilder : MonoBehaviour
         previewLine.enabled = false;
     }
     //wenn nicht anchor chanel auslosen. muss aber das andere ding prüfen. oder anders sum anchor setzten immer sich selbst auftrue und alles andere trifft automatisch auf niht true.
+    public bool IsPreviewLine(UMLLineController compareController)
+    {
+        return compareController.gameObject == previewLine.gameObject;
+    }
 }
