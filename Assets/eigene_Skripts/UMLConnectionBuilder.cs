@@ -13,6 +13,10 @@ public class UMLConnectionBuilder : MonoBehaviour
     public InputActionReference cancelActionLeft;
     public InputActionReference cancelActionRight; 
     private List<UMLLineController> AllConnections = new List<UMLLineController>();
+    public void RemoveConnection(UMLLineController con)
+    {
+        AllConnections.Remove(con);
+    }
 
      void Awake()
     {
@@ -35,7 +39,7 @@ public class UMLConnectionBuilder : MonoBehaviour
     {
         // Finde alle BaseComponents in der Szene
         UMLLineController[] allConns = FindObjectsOfType<UMLLineController>(true);
-        Debug.Log("SetGlobalVisibility ausgeführt, gefundene UMLConnectionController: " + allConns.Length);
+        //Debug.Log("SetGlobalVisibility ausgeführt, gefundene UMLConnectionController: " + allConns.Length);
         if(allConns == null) return;
         foreach (var cons in allConns)
         {
@@ -54,9 +58,9 @@ public class UMLConnectionBuilder : MonoBehaviour
     }
     public void RegistriereConnection(UMLLineController connection)
     {
-        Debug.Log("registrierungsmethode ausgeführt, Anzahl vorher: " + AllConnections.Count);
+        //Debug.Log("registrierungsmethode ausgeführt, Anzahl vorher: " + AllConnections.Count);
         if(!AllConnections.Contains(connection))  AllConnections.Add(connection);
-        Debug.Log("Anzahl jetzt "+ AllConnections.Count);
+        //Debug.Log("Anzahl jetzt "+ AllConnections.Count);
     }
 
     void Update()
@@ -103,7 +107,9 @@ public class UMLConnectionBuilder : MonoBehaviour
         GameObject newConnection = Instantiate(linePrefab);
         UMLLineController controller = newConnection.GetComponent<UMLLineController>();
         controller.AssignAnchors(firstAnchor.transform, secondAnchor.transform);
-        Debug.Log("FinalizeConnection abgeschlossen");
+        firstAnchor.AddConnection(controller);
+        secondAnchor.AddConnection(controller);
+        //Debug.Log("FinalizeConnection abgeschlossen");
 
         // In Listen eintragen
         //AllConnections.Add(controller);
@@ -125,7 +131,7 @@ public class UMLConnectionBuilder : MonoBehaviour
 
     void CancelConnection()
     {
-        Debug.Log("cancel ausgeführt");
+        //Debug.Log("cancel ausgeführt");
         firstAnchor = null;
         previewLine.enabled = false;
     }

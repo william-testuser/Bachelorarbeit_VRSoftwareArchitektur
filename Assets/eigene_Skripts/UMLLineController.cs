@@ -3,6 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class UMLLineController : MonoBehaviour
 {
+    
     public Transform anchorA;
     public Transform anchorB;
     private LineRenderer lineRenderer;
@@ -17,6 +18,7 @@ public class UMLLineController : MonoBehaviour
         
         // Material sollte im Inspector zugewiesen werden (z.B. URP Unlit)
     }
+    
 
     void Update()
     {

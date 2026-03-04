@@ -36,7 +36,7 @@ public class UMLManager : MonoBehaviour
     {
         // Finde alle BaseComponents in der Szene
         BaseComponent[] allComps = FindObjectsOfType<BaseComponent>(true);
-        Debug.Log("SetGlobalVisibility ausgeführt, gefundene BaseComponenten: " + allComps.Length);
+        //Debug.Log("SetGlobalVisibility ausgeführt, gefundene BaseComponenten: " + allComps.Length);
         foreach (var comp in allComps)
         {
             // Wenn wir im Arbeitsmodus sind, blende alles aus außer dem Fokus-Objekt
@@ -58,6 +58,11 @@ public class UMLManager : MonoBehaviour
         VRTextEditor editor =canvas.GetComponentInChildren<VRTextEditor>(true);
         editor.UpdateInputFields(baseComponenet.ReadInformationNode(1), baseComponenet.ReadInformationNode(2), baseComponenet.ReadInformationNode(3));
 
+    }
+    public void DeleteComponent()
+    {
+        Destroy(lastComponentTriggered.gameObject, 2.0f);
+        AlleKomponenten.Remove(lastComponentTriggered);
     }
     public void SetActivationInfoScreen(bool activity)
     {

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 public class UMLAnchor : MonoBehaviour
 {
     public BaseComponent parentComponent;
+    public List<UMLLineController> connectedConnections= new List<UMLLineController>();
     // Liste aller Verbindungen, falls man sie später zusammen löschen will
-    public List<UMLLineController> connections = new List<UMLLineController>();
     [SerializeField] private MeshRenderer meshRenderer;
     [SerializeField] private Material glowMaterial;
 
@@ -25,7 +25,19 @@ public class UMLAnchor : MonoBehaviour
         // Sicherstellen, dass der Layer auf "Ignore Raycast" steht, 
         // falls der Ray nur die Box treffen soll, oder "Interactable"
     }
-
+    void onDestroy()
+    {
+        foreach (var cons in connectedConnections)
+        {
+            connectedConnections.Remove(cons);
+            UMLAnchor anc = cons.anchorA.GetComponent<UMLAnchor>();
+            if(anc.transform == this.transform) anc = cons.anchorB.GetComponent<UMLAnchor>();
+            anc.connectedConnections.Remove(cons);
+            UMLConnectionBuilder.Instance.RemoveConnection(cons);
+            connectedConnections.Remove(cons); 
+            Destroy(cons.gameObject);
+        }
+    }
     public void NotifyManager()
     {
         if (builder != null && thisAnchor != null)
@@ -44,5 +56,10 @@ public class UMLAnchor : MonoBehaviour
     public void GlowOff()
     {
         if(meshRenderer!=null) meshRenderer.enabled = false;
+    }
+
+    public void AddConnection(UMLLineController con)
+    {
+        connectedConnections.Add(con);
     }
 }

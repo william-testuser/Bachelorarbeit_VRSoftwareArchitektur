@@ -140,7 +140,6 @@ public abstract class BaseComponent : MonoBehaviour
     {
         ToolboxLogik toolbox;
         
-        
         if (other.CompareTag(playerTagName)) // Prüft ob der Kopf des Nutzers eintritt
         {
             _currentGoal = targetScale;
@@ -155,7 +154,7 @@ public abstract class BaseComponent : MonoBehaviour
 
             if(toolbox != null) 
             {
-                Debug.Log("toolbox object: " + toolbox.gameObject.name);
+                //Debug.Log("toolbox object: " + toolbox.gameObject.name);
                 toolbox.addOneDepthLevel();
             }
             else
@@ -189,7 +188,7 @@ public abstract class BaseComponent : MonoBehaviour
         UMLManager.Instance.SetGlobalVisibility(false, this);
         UMLConnectionBuilder.Instance.SetGlobalVisibility(false, this);
         SetMaterial(glassMaterial);
-        Debug.Log("Arbeitsmodus aktiviert: Fokus auf " + gameObject.name + "(" + frontText + ")");
+        //Debug.Log("Arbeitsmodus aktiviert: Fokus auf " + gameObject.name + "(" + frontText + ")");
     }
 
     private void ExitWorkMode()
@@ -287,4 +286,5 @@ public abstract class BaseComponent : MonoBehaviour
     {
         return rayHover;
     }
+
 }
