@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentComponent: {fileID: 0}
-  connections: []
+  connectedConnections: []
   meshRenderer: {fileID: 5277494571979572464}
   glowMaterial: {fileID: 2100000, guid: dffbc8196be824f8080d69b9d28b4b4a, type: 2}
 --- !u!135 &7859681809654485556
@@ -407,7 +407,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentComponent: {fileID: 0}
-  connections: []
+  connectedConnections: []
   meshRenderer: {fileID: 4572112400899101272}
   glowMaterial: {fileID: 2100000, guid: dffbc8196be824f8080d69b9d28b4b4a, type: 2}
 --- !u!135 &4224834269245061250
@@ -638,7 +638,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentComponent: {fileID: 0}
-  connections: []
+  connectedConnections: []
   meshRenderer: {fileID: 8793809408423485372}
   glowMaterial: {fileID: 2100000, guid: dffbc8196be824f8080d69b9d28b4b4a, type: 2}
 --- !u!135 &4840976075742625365
@@ -869,7 +869,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentComponent: {fileID: 0}
-  connections: []
+  connectedConnections: []
   meshRenderer: {fileID: 8604075682845476863}
   glowMaterial: {fileID: 2100000, guid: dffbc8196be824f8080d69b9d28b4b4a, type: 2}
 --- !u!135 &8037832263349274323
@@ -1100,7 +1100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentComponent: {fileID: 0}
-  connections: []
+  connectedConnections: []
   meshRenderer: {fileID: 2526521436657555018}
   glowMaterial: {fileID: 2100000, guid: dffbc8196be824f8080d69b9d28b4b4a, type: 2}
 --- !u!135 &8335505083756803329
@@ -1331,7 +1331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentComponent: {fileID: 0}
-  connections: []
+  connectedConnections: []
   meshRenderer: {fileID: 6703634678480196089}
   glowMaterial: {fileID: 2100000, guid: dffbc8196be824f8080d69b9d28b4b4a, type: 2}
 --- !u!135 &586696851832247509
@@ -1866,7 +1866,19 @@ MonoBehaviour:
       m_Calls: []
   m_SelectExited:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_FirstFocusEntered:
     m_PersistentCalls:
       m_Calls: []

@@ -11,6 +11,8 @@ public class UMLManager : MonoBehaviour
     public List<BaseComponent> AlleKomponenten = new List<BaseComponent>();
     private BaseComponent lastComponentTriggered;
     [SerializeField] private Canvas canvas;
+    [SerializeField] private GameObject componentView;
+    [SerializeField] private GameObject connectoinView;
 
     public void RegistriereKomponente(BaseComponent comp)
     {
@@ -59,9 +61,10 @@ public class UMLManager : MonoBehaviour
     public void UpdateInfoScreen(BaseComponent baseComponenet)
     {
         lastComponentTriggered = baseComponenet;
-        SetActivationInfoScreen(true);
         VRTextEditor editor =canvas.GetComponentInChildren<VRTextEditor>(true);
         editor.UpdateInputFields(baseComponenet.ReadInformationNode(1), baseComponenet.ReadInformationNode(2), baseComponenet.ReadInformationNode(3));
+        editor.ResetPosition();
+        SetActivationInfoScreen(true);
 
     }
     public void DeleteComponent()
@@ -81,7 +84,8 @@ public class UMLManager : MonoBehaviour
     }
     public void SetActivationInfoScreen(bool activity)
     {
-        Debug.Log(canvas.name);
+        componentView.SetActive(true);
+        connectoinView.SetActive(false);
         canvas.gameObject.SetActive(activity);
     }
     public void UpdateBaseComponent(string name, string responsability, string description)

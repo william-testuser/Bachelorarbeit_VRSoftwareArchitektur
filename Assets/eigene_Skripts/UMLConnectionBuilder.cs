@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class UMLConnectionBuilder : MonoBehaviour
 {
@@ -9,9 +10,14 @@ public class UMLConnectionBuilder : MonoBehaviour
     [SerializeField] private GameObject linePrefab; // Ein Prefab mit dem UMLLineController
     [SerializeField] private LineRenderer previewLine; // Eine visuelle Linie während des Ziehens
     [SerializeField] private GameObject previewConenction;
+    [SerializeField] private UMLLineController lastConnectionTriggered;
+    [SerializeField] private Canvas canvas;
+    [SerializeField] private GameObject componentView;
+    [SerializeField] private GameObject connectoinView;
     
     public InputActionReference cancelActionLeft;
     public InputActionReference cancelActionRight; 
+    [SerializeField] private TMP_Dropdown dropDown;
     private List<UMLLineController> AllConnections = new List<UMLLineController>();
     public void RemoveConnection(UMLLineController con)
     {
@@ -113,9 +119,9 @@ public class UMLConnectionBuilder : MonoBehaviour
         //Debug.Log("FinalizeConnection abgeschlossen");
 
         // In Listen eintragen
-        //AllConnections.Add(controller);
-        Debug.Log(AllConnections.Count);
-
+        AllConnections.Add(controller);
+        //Debug.Log(AllConnections.Count);
+        UpdateInfoScreen(controller);
         CancelConnection(); // Reset für die nächste Verbindung
     }
 
@@ -142,8 +148,38 @@ public class UMLConnectionBuilder : MonoBehaviour
         return compareController.gameObject == previewLine.gameObject;
     }
 
-    public void updateConnectionInfo()
+    public void UpdateConnectionInfo()
     {
+        if(lastConnectionTriggered == null) return;
+        int index = dropDown.value;
+        string newTitle = dropDown.options[index].text;
+        lastConnectionTriggered.ChangeConnection(newTitle);
+        VRTextEditor editor =canvas.GetComponentInChildren<VRTextEditor>(true);
+        editor.UpdateTitel(newTitle);
+
         //über ein dropdown aufrufebn? und übergeben können? oder einzelne aber das kaka
+    }
+    public void UpdateInfoScreen(UMLLineController newController)
+    {
+        lastConnectionTriggered = newController;
+        VRTextEditor editor =canvas.GetComponentInChildren<VRTextEditor>(true);
+        editor.UpdateTitel(newController.GetConnectionType());
+        editor.ResetPosition();
+        SetActivationInfoScreen(true);
+    }
+    public void SetActivationInfoScreen(bool activity)
+    {
+        
+        componentView.SetActive(false);
+        connectoinView.SetActive(true);
+        canvas.gameObject.SetActive(activity);
+    }
+  
+    public void DeleteConnection()
+    {
+        if(lastConnectionTriggered == null) return;
+        AllConnections.Remove(lastConnectionTriggered);
+        Destroy(lastConnectionTriggered.gameObject, 0.2f);
+        lastConnectionTriggered = null;
     }
 }

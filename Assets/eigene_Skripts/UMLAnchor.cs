@@ -30,7 +30,8 @@ public class UMLAnchor : MonoBehaviour
         
         foreach (var cons in connectedConnections)
         {
-            if(UMLConnectionBuilder.Instance.IsPreviewLine(cons)) continue;
+            cons.destroyByAnchor = true;
+            if(UMLConnectionBuilder.Instance.IsPreviewLine(cons) || cons == null) continue;
             UMLAnchor anc = cons.anchorA.GetComponent<UMLAnchor>();
             if(anc.transform == this.transform) anc = cons.anchorB.GetComponent<UMLAnchor>();
             anc.connectedConnections.Remove(cons);
@@ -63,5 +64,9 @@ public class UMLAnchor : MonoBehaviour
     {
 
         connectedConnections.Add(con);
+    }
+    public void RemoveConnection(UMLLineController con)
+    {
+        connectedConnections.Remove(con);
     }
 }

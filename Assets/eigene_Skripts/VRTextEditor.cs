@@ -7,10 +7,16 @@ public class VRTextEditor : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldname;
     [SerializeField] private TMP_InputField inputFieldResponability;
     [SerializeField] private TMP_InputField inputFieldDescription;
-    [SerializeField] private TextMeshProUGUI componentName;
+    [SerializeField] private TextMeshProUGUI titel;
+    [SerializeField] private Transform uiForPostioning;
+    private Vector3 resetPosition;
+
     private TouchScreenKeyboard overlayKeyboard;
 
-
+    void Start()
+    {
+        resetPosition = uiForPostioning.position;
+    }
     public void OpenKeyboard()
     {
         // Öffnet das systemeigene VR-Keyboard (Quest/SteamVR)
@@ -26,10 +32,9 @@ public class VRTextEditor : MonoBehaviour
         }
     }
 
-    public void SetInputField(TMP_InputField newInputField)
+    public void UpdateTitel(string var)
     {
-        inputFieldname = newInputField;
-        //neue tastatur aktivieren?
+        titel.text = var + "-Connection";
     }
     public void UpdateInputFields(string name, string responsability, string description)
     {
@@ -37,7 +42,7 @@ public class VRTextEditor : MonoBehaviour
         inputFieldname.text = name;
         inputFieldResponability.text = responsability;
         inputFieldDescription.text = description;
-        componentName.text = name;
+        titel.text = name;
 
         //restliche Felder
     }
@@ -53,9 +58,12 @@ public class VRTextEditor : MonoBehaviour
     public void ClickUpdateButton()
     {
         UMLManager.Instance.UpdateBaseComponent(inputFieldname.text, inputFieldResponability.text, inputFieldDescription.text);
-        componentName.text = inputFieldname.text;
+        titel.text = inputFieldname.text;
     }
     
-    
+    public void ResetPosition()
+    {
+        uiForPostioning.transform.position = resetPosition;
+    }
 
 }
