@@ -7,15 +7,21 @@ public class VRTextEditor : MonoBehaviour
     [SerializeField] private TMP_InputField inputFieldname;
     [SerializeField] private TMP_InputField inputFieldResponability;
     [SerializeField] private TMP_InputField inputFieldDescription;
+    [SerializeField] private TMP_InputField inputFieldSearch;
     [SerializeField] private TextMeshProUGUI titel;
     [SerializeField] private Transform uiForPostioning;
+    [SerializeField] private GameObject componentView;
+    [SerializeField] private GameObject connectionView;
+    [SerializeField] private GameObject MetaView;
+    [SerializeField] private TextMeshProUGUI searchButtonText;
     private Vector3 resetPosition;
 
+    private bool searchMode = false;
     private TouchScreenKeyboard overlayKeyboard;
 
     void Start()
     {
-        resetPosition = uiForPostioning.position;
+        resetPosition = uiForPostioning.localPosition;
     }
     public void OpenKeyboard()
     {
@@ -51,8 +57,12 @@ public class VRTextEditor : MonoBehaviour
     {
         //componentName.text = "Dummy";
         if(canvas == null) Debug.Log("canvas = Null");
-        else //Debug.Log("canvas = "+ canvas.name);
-        canvas.gameObject.SetActive(false);
+        else
+        {
+            MetaView.SetActive(true);
+            //Debug.Log("canvas = "+ canvas.name);
+            //canvas.gameObject.SetActive(false);
+        }
     }
     
     public void ClickUpdateButton()
@@ -63,7 +73,22 @@ public class VRTextEditor : MonoBehaviour
     
     public void ResetPosition()
     {
-        uiForPostioning.transform.position = resetPosition;
+        uiForPostioning.transform.localPosition = resetPosition;
     }
 
+    public void Callsearch()
+    {
+        if (!searchMode)
+        {
+            UMLManager.Instance.Search(inputFieldSearch.text);
+            searchButtonText.text = "cancel search";
+        }
+        else
+        {
+            UMLConnectionBuilder.Instance.SetGlobalVisibility(true, null);
+            searchButtonText.text = "search";
+        }
+        
+
+    }
 }

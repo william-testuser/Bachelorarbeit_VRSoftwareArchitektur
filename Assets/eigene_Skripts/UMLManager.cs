@@ -13,7 +13,35 @@ public class UMLManager : MonoBehaviour
     [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject componentView;
     [SerializeField] private GameObject connectoinView;
+    [SerializeField] private GameObject MetaView;
 
+    public void ClearScene()
+    {
+         BaseComponent[] allComps = FindObjectsOfType<BaseComponent>(true);
+        //Debug.Log("SetGlobalVisibility ausgeführt, gefundene BaseComponenten: " + allComps.Length);
+        foreach (var comp in allComps)
+        {
+            lastComponentTriggered = comp;
+            DeleteComponent();
+        }
+       
+    }
+
+    public void Search(string nameOfSearchObject)
+    {
+        BaseComponent searchComp = null;
+        foreach (BaseComponent comp in AlleKomponenten)
+        {
+            if(comp.ReadInformationNode(1) == nameOfSearchObject){
+                 searchComp = comp;
+                 break;
+            }
+        }
+
+        if(searchComp != null)SetGlobalVisibility(false, searchComp);
+        else Debug.Log("Text nicht richtig oder Gameobjekt nicht gefunden");
+        // irgendwas mit timer oder zweites mal drücken für zurücksetzten? dann mit text ändern
+    }
     public void RegistriereKomponente(BaseComponent comp)
     {
         Debug.Log("registrierungsmethode ausgeführt, Anzahl vorher: " + AlleKomponenten.Count);
@@ -36,6 +64,18 @@ public class UMLManager : MonoBehaviour
 
     public void SetGlobalVisibility(bool visible, BaseComponent focusObject)
     {
+        bool topLayer = false;
+        BaseComponent upwardLayerComponent;
+        if(focusObject.transform.parent == null)
+        {
+            upwardLayerComponent = null;
+            topLayer = true; 
+            Debug.Log("true = topLayer");
+        }
+        //else upwardLayerComponent = focusObject.transform.GetComponentInParent<BaseComponent>();
+      
+        
+        Debug.Log(focusObject);
         // Finde alle BaseComponents in der Szene
         BaseComponent[] allComps = FindObjectsOfType<BaseComponent>(true);
         //Debug.Log("SetGlobalVisibility ausgeführt, gefundene BaseComponenten: " + allComps.Length);
@@ -48,9 +88,29 @@ public class UMLManager : MonoBehaviour
             {
                 comp.gameObject.SetActive(false);
             }
-            else
+            else if(visible  /*|| comp.transform.parent == focusObject.transform || comp.transform == focusObject.transform)*/)
+            {
+
+                if ((topLayer && comp.transform.parent == null ) || (!topLayer && (comp.transform.parent == focusObject.transform.parent || focusObject.transform.IsChildOf(comp.transform))))
+                {
+                    Debug.Log("toplayer oder das child...");
+                    comp.gameObject.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log("else");
+                    comp.gameObject.SetActive(false);
+                }
+                
+            }
+            else if(!visible)
             {
                 comp.gameObject.SetActive(true);
+            }
+            else
+            {
+                //nur die kinder objekte die zuletzt auf true gesetzt wurden, sollten hier deaktiviert werden.
+                Debug.Log("Darf nicht passieren");
             }
         }
     }
@@ -86,6 +146,7 @@ public class UMLManager : MonoBehaviour
     {
         componentView.SetActive(true);
         connectoinView.SetActive(false);
+        MetaView.SetActive(false);
         canvas.gameObject.SetActive(activity);
     }
     public void UpdateBaseComponent(string name, string responsability, string description)

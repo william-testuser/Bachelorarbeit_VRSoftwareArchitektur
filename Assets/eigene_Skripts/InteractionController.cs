@@ -9,7 +9,7 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class InteractoinController : MonoBehaviour
 {
-    [SerializeField] Camera playerCamera;
+   /* [SerializeField] Camera playerCamera;
     [SerializeField] TextMeshProUGUI interactionText;
     BaseComponent currentTargetInteractable;
     [SerializeField] InputActionProperty inputRight;
@@ -24,7 +24,7 @@ public class InteractoinController : MonoBehaviour
         //rightHandRayInteractor = GetComponentInChilden(RayInteractor);
        /* UpdateCurrentInteractable();
         UpdateInteractableText();
-        CheckForInteractionInput();*/
+        CheckForInteractionInput();
 
     }
 
@@ -95,4 +95,5 @@ public class InteractoinController : MonoBehaviour
 
         return null;
     }*/
+
 }

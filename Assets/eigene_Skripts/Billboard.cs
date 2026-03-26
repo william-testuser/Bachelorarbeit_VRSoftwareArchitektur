@@ -6,12 +6,14 @@ public class Billboard : MonoBehaviour
     public Transform targetCube; // Ziehe hier deinen Cube rein
     public float distance = 0.6f; // Abstand vom Mittelpunkt des Cubes
     private Transform camTransform;
+
     [SerializeField] private TextMeshProUGUI textContainer;
+    [SerializeField] private Transform canvasTransform;
 
     void awake()
     {
         textContainer = GetComponentInChildren<TextMeshProUGUI>();
-    
+        InitialSettingOfCanvasDistance();
         if (textContainer == null)
         {
             Debug.LogError("Kein TextMeshPro im Canvas gefunden!");
@@ -24,6 +26,17 @@ public class Billboard : MonoBehaviour
         camTransform = Camera.main.transform;
     }
 
+    private void InitialSettingOfCanvasDistance()
+    {
+        Vector3 worldScale = targetCube.lossyScale;
+        float distanceTop = worldScale.y / 2f;
+    
+        // Offset hinzufügen, damit die Canvas nicht direkt auf dem Mesh klebt
+        float offset = 0.1f; 
+        
+        // Positioniere die Canvas relativ zum Cube-Zentrum
+        canvasTransform.position = targetCube.transform.position + new Vector3(0, distanceTop + offset, 0);
+    }
     // LateUpdate wird nach allen anderen Bewegungen aufgerufen
     void LateUpdate()
     {

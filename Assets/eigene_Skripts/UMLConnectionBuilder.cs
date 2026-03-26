@@ -14,11 +14,12 @@ public class UMLConnectionBuilder : MonoBehaviour
     [SerializeField] private Canvas canvas;
     [SerializeField] private GameObject componentView;
     [SerializeField] private GameObject connectoinView;
+    [SerializeField] private GameObject MetaView;
     
     public InputActionReference cancelActionLeft;
     public InputActionReference cancelActionRight; 
     [SerializeField] private TMP_Dropdown dropDown;
-    private List<UMLLineController> AllConnections = new List<UMLLineController>();
+    public List<UMLLineController> AllConnections = new List<UMLLineController>();
     public void RemoveConnection(UMLLineController con)
     {
         AllConnections.Remove(con);
@@ -57,9 +58,18 @@ public class UMLConnectionBuilder : MonoBehaviour
             {
                 cons.gameObject.SetActive(false);
             }
-            else
+            else if(visible && (cons.anchorA.parent.parent == null 
+                && cons.anchorB.parent.parent == null))
             {
                 cons.gameObject.SetActive(true);
+            } 
+            else if(!visible)
+            {
+                cons.gameObject.SetActive(true);
+            } 
+            else
+            {
+                cons.gameObject.SetActive(false);
             }
         }
     }
@@ -70,6 +80,10 @@ public class UMLConnectionBuilder : MonoBehaviour
         //Debug.Log("Anzahl jetzt "+ AllConnections.Count);
     }
 
+    public void ClearAllConnections()
+    {
+       
+    }
     void Update()
     {
         if (firstAnchor != null)
@@ -120,9 +134,16 @@ public class UMLConnectionBuilder : MonoBehaviour
 
         // In Listen eintragen
         AllConnections.Add(controller);
+        lastConnectionTriggered = controller;
         //Debug.Log(AllConnections.Count);
         UpdateInfoScreen(controller);
         CancelConnection(); // Reset für die nächste Verbindung
+    }
+    public void CreateConnection(Transform anchorA, Transform AnchorB, string connT)
+    {
+        firstAnchor = anchorA.GetComponent<UMLAnchor>();
+        FinalizeConnection(AnchorB.GetComponent<UMLAnchor>());
+        lastConnectionTriggered.ChangeConnection(connT);
     }
 
     void UpdatePreviewLine()
@@ -171,6 +192,7 @@ public class UMLConnectionBuilder : MonoBehaviour
     {
         
         componentView.SetActive(false);
+        MetaView.SetActive(false);
         connectoinView.SetActive(true);
         canvas.gameObject.SetActive(activity);
     }
