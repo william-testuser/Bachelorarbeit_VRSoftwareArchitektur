@@ -4052,12 +4052,12 @@ RectTransform:
   - {fileID: 1328326723}
   - {fileID: 1858043301}
   - {fileID: 1238145093}
-  - {fileID: 1992120939}
   - {fileID: 650589851}
   - {fileID: 126872812}
   - {fileID: 37754640}
   - {fileID: 885742792}
   - {fileID: 1468685540}
+  - {fileID: 1992120939}
   m_Father: {fileID: 1115989971}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}

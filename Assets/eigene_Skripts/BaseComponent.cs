@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
-using UnityEngine.XR.Interaction.Toolkit;
+
 
 //bekommt einen Float test und der wir immer zur bamera gedreht (mehrspeiler...)
 //update oder bei spielerbewegung... und aufwand?
@@ -15,6 +15,12 @@ public abstract class BaseComponent : MonoBehaviour
     [SerializeField] public TextMeshProUGUI frontText;
     [SerializeField] protected InputActionReference rightTriggerAction;
     [SerializeField] protected List<BaseComponent> childComponents = new List<BaseComponent>();
+    public UMLAnchor anchorFront;
+    public UMLAnchor anchorBack;
+    public UMLAnchor anchorRight;
+    public UMLAnchor anchorLeft;
+    public UMLAnchor anchorUp;
+    public UMLAnchor anchorDown;
     private string id;
     private int count = 0;
     [SerializeField] public string playerTagName;
@@ -35,7 +41,7 @@ public abstract class BaseComponent : MonoBehaviour
     //vergrößerung der Componenete Funktion, kleinen
 
     [Header("ScalerSettings")]
-    [SerializeField] protected Vector3 targetScale = new Vector3(1.2f, 1.2f, 1.2f); // 20% größer
+    [SerializeField] protected Vector3 targetScale; // 20% größer
     [SerializeField] protected float speed = 5f; // Wie schnell skaliert es?
 
     protected Vector3 _originalScale;
@@ -43,8 +49,27 @@ public abstract class BaseComponent : MonoBehaviour
 
     [Header("trigger")]
     [SerializeField] private BoxCollider interactionCollider;
-    private int _playerInZoneCount = 0;
+    //private int _playerInZoneCount = 0;
 
+    void Awake()
+    {
+        // Hole die Referenz zum Grab Interactable
+        if (TryGetComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>(out UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable interactable))
+        {
+            // 1. Die Liste der Collider leeren
+            interactable.colliders.Clear();
+
+            // 2. Deinen spezifischen Collider hinzufügen
+            if (interactionCollider != null)
+            {
+                interactable.colliders.Add(interactionCollider);
+            }
+            else
+            {
+                Debug.LogWarning("Kein interaction Collider für Awake zugewiesen!");
+            }
+        }
+    }
     /**
     gür übergroße Kinderkomponenten hell dunel einstellung nutzen
     je nach menge der Komponenten als Kinder einer Komponente ändert dieser die Farbe ab einem schwellenert
@@ -54,7 +79,6 @@ public abstract class BaseComponent : MonoBehaviour
     //if (_propBlock == null) _propBlock = new MaterialPropertyBlock();
     
     int totalComplexity = childComponents.Count;
-    Debug.Log(totalComplexity);
     float factor = (totalComplexity > 4) ? Mathf.Clamp01((float)totalComplexity / complexityThreshold) : 0f;
     Color heatColor = Color.Lerp(baseColor, Color.red, factor);
 
@@ -81,9 +105,10 @@ public abstract class BaseComponent : MonoBehaviour
 
         return count;
     }
-
-
-
+    public void UpdateComponentCollider()
+    {
+        
+    }
     public void Initiate()
     { 
         Debug.Log("new Komponent initiated");
@@ -104,7 +129,7 @@ public abstract class BaseComponent : MonoBehaviour
 
         //zum dynamic zoom
         _originalScale = transform.localScale;
-        _currentGoal = _originalScale;
+        targetScale = Vector3.Scale(transform.localScale ,targetScale);
 
         //nicht dauerhaft triggern im Cube
         if (interactionCollider == null) interactionCollider = GetComponent<BoxCollider>();
@@ -174,9 +199,11 @@ public abstract class BaseComponent : MonoBehaviour
 
             ExitWorkMode();
             toolbox = other.GetComponentInChildren<ToolboxLogik>();
+            //in workmode vercshieben
             toolbox.subtractOneDepthLevel();
-            BaseComponent parentCompoenet = this.transform.parent.GetComponent<BaseComponent>();
-            if(parentCompoenet != null) toolbox.SetParentBasecomponent(parentCompoenet);
+            Transform myParent = this.transform.parent;
+            if(myParent != null) toolbox.SetParentBasecomponent(myParent.GetComponent<BaseComponent>());
+            else toolbox.SetParentBasecomponent(null);
             
         }
     }
@@ -188,19 +215,28 @@ public abstract class BaseComponent : MonoBehaviour
         UMLManager.Instance.SetGlobalVisibility(false, this);
         UMLConnectionBuilder.Instance.SetGlobalVisibility(false, this);
         SetMaterial(glassMaterial);
+        //SetScaleSoft();
         //Debug.Log("Arbeitsmodus aktiviert: Fokus auf " + gameObject.name + "(" + frontText + ")");
     }
 
     private void ExitWorkMode()
-    {
-        UMLManager.Instance.SetGlobalVisibility(true, null);
-        UMLConnectionBuilder.Instance.SetGlobalVisibility(true, null);
+    { 
+        
+       /* if(upwardLayerComponent == null)
+        {
+            UMLManager.Instance.SetGlobalVisibility(true, upwardLayerComponent);
+        }
+        else
+        {
+            UMLManager.Instance.SetGlobalVisibility(false, upwardLayerComponent);
+        }*/
+        UMLManager.Instance.SetGlobalVisibility(true, this);
+        UMLConnectionBuilder.Instance.SetGlobalVisibility(true, this.transform.GetComponentInParent<BaseComponent>());
         UpdateVisualHeatmap();
         SetMaterial(solidMaterial);
+        //SetScaleSoft();
         
-
-        
-        // Tipp: Hier rufen wir das Singleton auf
+        // Autosave Aufruf des Singleton
         if(SaveManager.Instance != null)
         {
             SaveManager.Instance.SaveScene();
@@ -208,6 +244,38 @@ public abstract class BaseComponent : MonoBehaviour
         }
     }
   
+    public string ReadAnchorPosition(Transform checkAnchor)
+    {
+        if (checkAnchor == anchorFront.transform) return "front";
+        if (checkAnchor == anchorBack.transform)  return "back";
+        if (checkAnchor == anchorUp.transform)    return "up";
+        if (checkAnchor == anchorDown.transform)  return "down";
+        if (checkAnchor == anchorRight.transform) return "right";
+        if (checkAnchor == anchorLeft.transform)  return "left";
+        Debug.Log("<color=blue>kein match </color>");
+        return null;
+    }
+
+    public Transform GetAnchorByPosition(string position)
+    {
+        switch (position)
+        {
+            case "front":
+                return anchorFront.transform;
+            case "back":
+                return anchorBack.transform;
+            case "up":
+                return anchorUp.transform;
+            case "down":
+                return anchorDown.transform;
+            case "left":
+                return anchorLeft.transform;
+            case "right":
+                return anchorRight.transform;
+            
+        }
+        return null;
+    }
     public string ReadInformationNode(int infoNummer)
     {
         if(infoNode == null)
@@ -241,13 +309,11 @@ public abstract class BaseComponent : MonoBehaviour
     {
         return id;
     }
-
-    public void Test()
+    public void setId(string newID)
     {
-        count++;
-        frontText.text = count.ToString();
+        id = newID;
     }
-
+    //sollte immer vonlocalposition ausgehen, keinn kein Parent da ist ist localPosition auch gleich position
     public void SetPosition(Vector3 vector)
     {
        if (transform.parent == null) 
@@ -259,6 +325,11 @@ public abstract class BaseComponent : MonoBehaviour
             transform.localPosition = vector;
         }
     }
+    public void SetRotation(Quaternion targetRotation)
+    {
+        transform.rotation = targetRotation;
+    }
+
     private void SetMaterial(Material material)
     {
         shellRenderer.material = material;
@@ -267,9 +338,21 @@ public abstract class BaseComponent : MonoBehaviour
     {
         transform.localScale = Vector3.one * scale;
     }
+    private void SetScaleSoft()
+    {
+        if(transform.localScale == targetScale)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, _originalScale, Time.deltaTime * speed);
+        }
+        else if(transform.localScale == _originalScale)
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, targetScale, Time.deltaTime * speed);
+        }
+        
+    }
     public void CallDadToDoTheWork()
     {
-        Debug.Log("called Dad");
+        //Debug.Log("called Dad");
         UMLManager.Instance.UpdateInfoScreen(this);
     }
     public void RayHoveringTrue()

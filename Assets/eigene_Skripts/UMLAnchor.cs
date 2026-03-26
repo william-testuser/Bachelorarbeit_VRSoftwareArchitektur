@@ -25,18 +25,20 @@ public class UMLAnchor : MonoBehaviour
         // Sicherstellen, dass der Layer auf "Ignore Raycast" steht, 
         // falls der Ray nur die Box treffen soll, oder "Interactable"
     }
-    void onDestroy()
+    void OnDestroy()
     {
+        
         foreach (var cons in connectedConnections)
         {
-            connectedConnections.Remove(cons);
+            cons.destroyByAnchor = true;
+            if(UMLConnectionBuilder.Instance.IsPreviewLine(cons) || cons == null) continue;
             UMLAnchor anc = cons.anchorA.GetComponent<UMLAnchor>();
             if(anc.transform == this.transform) anc = cons.anchorB.GetComponent<UMLAnchor>();
             anc.connectedConnections.Remove(cons);
             UMLConnectionBuilder.Instance.RemoveConnection(cons);
-            connectedConnections.Remove(cons); 
             Destroy(cons.gameObject);
         }
+
     }
     public void NotifyManager()
     {
@@ -60,6 +62,11 @@ public class UMLAnchor : MonoBehaviour
 
     public void AddConnection(UMLLineController con)
     {
+
         connectedConnections.Add(con);
+    }
+    public void RemoveConnection(UMLLineController con)
+    {
+        connectedConnections.Remove(con);
     }
 }

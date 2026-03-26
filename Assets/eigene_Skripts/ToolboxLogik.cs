@@ -55,17 +55,16 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
 
     public void SpawnPrefab(int componente)
     {
-        Debug.Log("spawned executed");
+        //Debug.Log("spawned executed");
         GameObject initObject = null;
-
+        if(componente>0 && insertIntoThisBasecomponent == null)
+        {
+            Debug.Log("Ebene höher als 0: " + componente + " aber kein Parent der Basekomponente ist");
+            return;
+        }
         switch (componente)
         {
         
-            /*case 0: 
-                initObject = Instantiate(componenteLevel0);
-                var scipt = initObject.GetComponent<ComponentObjectInteracable>();
-                interactableObj = initObject.GetComponent<IInteractable>();
-                break;*/
             case 0: 
                 Debug.Log("case 1 ausgeführt");
                 
@@ -117,5 +116,33 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
 
         initObject?.SetActive(true);
 
+    }
+
+    public BaseComponent SpawnPrefab()
+    {
+        GameObject initObject = null;
+        initObject = Instantiate(componenteLevel0);
+        baseComponent = initObject.GetComponent<BaseComponent>();
+        baseComponent.SetPosition(new Vector3(count, 2.5f , 0));
+        baseComponent.Initiate();
+        return baseComponent;
+    }
+    public BaseComponent SpawnPrefab(BaseComponent newParent)
+    {
+        if(newParent != null)
+        {
+            
+        
+            GameObject initObject = null;
+            initObject = Instantiate(componenteLevel1, newParent.gameObject.transform);
+            //initObject.transform.localPosition = Vector3.zero;
+            baseComponent = initObject.GetComponent<BaseComponent>();
+            baseComponent.SetPosition(new Vector3(0, 0 , 0));
+            baseComponent.SetScale(0.2f);
+            baseComponent.Initiate();
+            newParent.AddChild(baseComponent);
+        }
+        else Debug.Log("<color=red>new Parent ist null im spawn</color>");
+        return baseComponent;
     }
 }
