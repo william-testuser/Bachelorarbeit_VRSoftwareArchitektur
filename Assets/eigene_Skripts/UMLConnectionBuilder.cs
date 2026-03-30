@@ -41,7 +41,10 @@ public class UMLConnectionBuilder : MonoBehaviour
     {
        
     }
-
+    /*
+    setzt alle Connections die ncict verbunden sind mit einem Kind des focusobjekts auf nicht sichtbar
+     und alle die verbundensind mit einem direkten Kind des fokusobjekts auf sichtbar
+    */
     public void SetGlobalVisibility(bool visible, BaseComponent focusObject)
     {
         // Finde alle BaseComponents in der Szene
@@ -84,6 +87,9 @@ public class UMLConnectionBuilder : MonoBehaviour
     {
        
     }
+    /*
+    checkt continuierlich auf einen abbruch des aktuellen zeichnens
+    */
     void Update()
     {
         if (firstAnchor != null)
@@ -98,7 +104,9 @@ public class UMLConnectionBuilder : MonoBehaviour
             }
         }
     }
-
+/*
+Setzt den ersten angeklickten anchor
+*/
     public void OnAnchorSelected(UMLAnchor selectedAnchor)
     {
         if (firstAnchor == null)
@@ -123,6 +131,9 @@ public class UMLConnectionBuilder : MonoBehaviour
         }
     }
 
+/*
+erstellt das ConnectionPrefab und initialisiert es, danachruft es cancel connection auf um sich selbst wieder vorzubereiten auf eine neue Verbindung
+*/
     void FinalizeConnection(UMLAnchor secondAnchor)
     {
         GameObject newConnection = Instantiate(linePrefab);
@@ -139,13 +150,16 @@ public class UMLConnectionBuilder : MonoBehaviour
         UpdateInfoScreen(controller);
         CancelConnection(); // Reset für die nächste Verbindung
     }
+    //erstellt direkt verbundungen, nutzung für den SaveManager bestimmt
     public void CreateConnection(Transform anchorA, Transform AnchorB, string connT)
     {
         firstAnchor = anchorA.GetComponent<UMLAnchor>();
         FinalizeConnection(AnchorB.GetComponent<UMLAnchor>());
         lastConnectionTriggered.ChangeConnection(connT);
     }
-
+    /*
+    
+    */
     void UpdatePreviewLine()
     {
         //irgendwas ein bisschen besser setzen im anchor, alle winkel sind mist.
@@ -157,6 +171,9 @@ public class UMLConnectionBuilder : MonoBehaviour
         previewLine.SetPosition(1, transform.position); 
     }
 
+    /*
+    disabled die Previewlineund setzt einen ersten bereits selektierten Anchor zurücka uf null
+    */
     void CancelConnection()
     {
         //Debug.Log("cancel ausgeführt");
@@ -188,6 +205,9 @@ public class UMLConnectionBuilder : MonoBehaviour
         editor.ResetPosition();
         SetActivationInfoScreen(true);
     }
+    /*
+    öffnet das Connection Fenster in der personal UI
+    */
     public void SetActivationInfoScreen(bool activity)
     {
         

@@ -42,6 +42,9 @@ public class VRTextEditor : MonoBehaviour
     {
         titel.text = var + "-Connection";
     }
+    /*
+    setzt die Daten beim aufruf ins Metafenster
+    */
     public void UpdateInputFields(string name, string responsability, string description)
     {
 
@@ -71,6 +74,9 @@ public class VRTextEditor : MonoBehaviour
         titel.text = inputFieldname.text;
     }
     
+    /*
+    setzt die anfangsposition des Fensters zurück
+    */
     public void ResetPosition()
     {
         uiForPostioning.transform.localPosition = resetPosition;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //braucht kein MonoBehaiour, da es ein reines Totes Datenobject ist
+//speichert die Metasaten als Datenobjekt einer Komponente
 public class InformationNode
 {
     private string _responsibility; // Das eigentliche Feld

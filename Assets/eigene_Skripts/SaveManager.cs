@@ -15,6 +15,10 @@ public class SaveManager : MonoBehaviour
     private string loadFileName = "uml_save.json";
     [SerializeField] private TMP_InputField inputField;
      [SerializeField] private TMP_Dropdown dropDown;
+     /*
+     abfrage ob es als Singleton exestiert und wenn nicht zerstört es sich
+     legt den Speicerord in der Aplikation fest beim erwachen
+     */
     void Awake()
     {
         // Singleton-Logik
@@ -55,6 +59,10 @@ public class SaveManager : MonoBehaviour
         // hier noch den ganzen path ändern
     }
 
+    /*
+    Speichert alle Daten der Connections und Komponentnen in einer Liste, getrennt nach Komponenten und Connections
+    mit JSONUtility wird alles in eine Stringdatei umgewandelt im JSON-Format
+    */
     public void SaveScene()
     {
         UMLSaveData data = new UMLSaveData();
@@ -109,7 +117,11 @@ public class SaveManager : MonoBehaviour
     }
 
 
-
+    /*
+    Prüft ob die Datei exestiert und fehlerfreifrei gelesen werden kann
+    wenn ja, dann wird über die Toolbox alle elemente erstellt und zwischenzeitlich über eine Map gespeichert mit der UID als Key
+    und anschließend die Hierarchie wieder hergestellt 
+    */
     public void LoadScene()
     {
     if (!File.Exists(savePath))

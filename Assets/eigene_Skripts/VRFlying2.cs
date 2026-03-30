@@ -20,6 +20,10 @@ public class VRFlySystem2 : MonoBehaviour
     [SerializeField] private XRBaseInputInteractor leftNearFarInteractor;
     [SerializeField] private XRBaseInputInteractor rightNearFarInteractor;
 
+    /*
+    prüft ob die flying belegunf des Joycons für eine andere Bedienung gebraucht wird und wenn nicht, 
+    updatet dieser die höhenposition des Nutzers
+    */
     void Update()
     {
         // 1. Abbruch, wenn eine Hand etwas hält oder über UI schwebt

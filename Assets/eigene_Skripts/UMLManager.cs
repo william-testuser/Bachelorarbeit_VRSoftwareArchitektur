@@ -62,6 +62,10 @@ public class UMLManager : MonoBehaviour
         }
     }
 
+    /*
+    setzte dalle kinder objekte auf nicht sichbar, wenn keine Komponente betregen ist, setzte bim austreten alle elemente der gleichen ebene auf sichtbar,
+    wenn innerhalb eines Parentobjekts ausgetreten, dann nur dessen geschwisterobjekte
+    */
     public void SetGlobalVisibility(bool visible, BaseComponent focusObject)
     {
         bool topLayer = false;
@@ -149,6 +153,9 @@ public class UMLManager : MonoBehaviour
         MetaView.SetActive(false);
         canvas.gameObject.SetActive(activity);
     }
+    /*
+    liest alle Metadaten aus dem persönlichen Interaktionsfenster aus und ipdates diese in die Komponente
+    */ 
     public void UpdateBaseComponent(string name, string responsability, string description)
     {
         if(lastComponentTriggered != null)lastComponentTriggered.UpdateInfoNode(name, responsability, description);

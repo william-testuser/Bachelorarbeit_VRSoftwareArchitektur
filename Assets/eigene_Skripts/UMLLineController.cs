@@ -46,6 +46,11 @@ public class UMLLineController : MonoBehaviour
         connectionType = con;
         typeDisplay.text = con;
     }
+    /*
+    setzt die Position der Linie neu jeden frame. 
+    updated die entpunkte der linie mit den punkten der Anchor an die diese verbunden ist
+
+    */
     void Update()
     {
         if (anchorA != null && anchorB != null)
@@ -61,7 +66,7 @@ public class UMLLineController : MonoBehaviour
             {
                 canvasTransform.position = mitte;
                 
-                // Optional: Den Text immer zur Kamera drehen (Billboarding)
+                
                 // canvasTransform.LookAt(canvasTransform.position + Camera.main.transform.forward);
             }
         }
@@ -79,6 +84,9 @@ public class UMLLineController : MonoBehaviour
         Update3DCollider();
     }
     
+    /*
+    setzt entsprechen dem update der Linienpositind den Collider neu
+    */
     public void Update3DCollider()
     {
         if (meshCollider == null) meshCollider = gameObject.AddComponent<MeshCollider>();

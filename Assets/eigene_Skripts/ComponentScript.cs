@@ -10,7 +10,9 @@ public class Component : BaseComponent
         
     }
 
-    // Update is called once per frame
+    // checkt ab der Ray en Cube anvisiert hat über RayHover und gleichzeitig der 
+    // Trigger gedrückt wird, wenn ja dann informiert die Methode Call DadToDoTheWork)() 
+    // den UMLManager um die Metadaten upzudaten
     void Update()
     {
          if (GetRayHover())

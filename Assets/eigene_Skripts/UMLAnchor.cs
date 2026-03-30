@@ -40,6 +40,9 @@ public class UMLAnchor : MonoBehaviour
         }
 
     }
+    /*
+    Ruft den ConnectionBuilder auf und informiert diesen über das Auswählen dieses Anchors
+    */
     public void NotifyManager()
     {
         if (builder != null && thisAnchor != null)

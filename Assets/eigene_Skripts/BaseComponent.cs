@@ -51,6 +51,11 @@ public abstract class BaseComponent : MonoBehaviour
     [SerializeField] private BoxCollider interactionCollider;
     //private int _playerInZoneCount = 0;
 
+    /*
+    *. Cleared die Liste der zu nutzenden collider und setzt nur den interactioncollider
+    * für den Grab, damit der Collider für die Trigger Interaction nicht übernommen wird
+    *
+    */
     void Awake()
     {
         // Hole die Referenz zum Grab Interactable
@@ -71,8 +76,8 @@ public abstract class BaseComponent : MonoBehaviour
         }
     }
     /**
-    gür übergroße Kinderkomponenten hell dunel einstellung nutzen
-    je nach menge der Komponenten als Kinder einer Komponente ändert dieser die Farbe ab einem schwellenert
+    je nach menge der Komponenten als Kinder einer Komponente ändert dieser 
+    die Farbe der eigenen Komponente ab einem schwellenert: complexityThreshold
     */
     public void UpdateVisualHeatmap()
     {
@@ -109,6 +114,10 @@ public abstract class BaseComponent : MonoBehaviour
     {
         
     }
+    /**
+    In einer eigenen Initialisierung werden alle positionen, Größen und auch der UMLManager neu gesetzt
+    um die exestenz aller Komponenten zu gewähleisten und die initialisierung auch zurküftig seperat ansteuern zu können
+    */
     public void Initiate()
     { 
         Debug.Log("new Komponent initiated");
@@ -159,8 +168,12 @@ public abstract class BaseComponent : MonoBehaviour
         }
     }
 
-    // --- TEIL 2: Betreten der Box (Außenwelt ausblenden) ---
-    // Voraussetzung: Die Box hat einen BoxCollider mit "Is Trigger = true"
+    
+    /*
+    prüft ob das eingetretene objekt der Player ist über den Tag, setzt das Depthlevel in der 
+    Toolbox durch einen aufruf und rüft Enter Workmode  
+    */
+    // FIXME:setzten des Depthlevel auf EnterWorkMode versetzten
     private void OnTriggerEnter(Collider other)
     {
         ToolboxLogik toolbox;
@@ -189,7 +202,9 @@ public abstract class BaseComponent : MonoBehaviour
             
         }
     }
-
+    /*
+    analog zu OnTriggerEnter die Rückabwicklung
+    */
     private void OnTriggerExit(Collider other)
     {
         ToolboxLogik toolbox;
@@ -208,7 +223,9 @@ public abstract class BaseComponent : MonoBehaviour
         }
     }
    
- 
+    /*
+    Ruft alle Methoden auf die den Semantic Zoom umsetzen
+    */
     private void EnterWorkMode()
     {
         // Blende alles aus, was nicht dieses Objekt oder ein Kind davon ist
@@ -219,17 +236,12 @@ public abstract class BaseComponent : MonoBehaviour
         //Debug.Log("Arbeitsmodus aktiviert: Fokus auf " + gameObject.name + "(" + frontText + ")");
     }
 
+    /*
+    Analog zu EnterWorkMode die Rückabwicklung des Semantic Zooms
+    zusätzlich speichern über den SaveManager auslösen
+    */
     private void ExitWorkMode()
     { 
-        
-       /* if(upwardLayerComponent == null)
-        {
-            UMLManager.Instance.SetGlobalVisibility(true, upwardLayerComponent);
-        }
-        else
-        {
-            UMLManager.Instance.SetGlobalVisibility(false, upwardLayerComponent);
-        }*/
         UMLManager.Instance.SetGlobalVisibility(true, this);
         UMLConnectionBuilder.Instance.SetGlobalVisibility(true, this.transform.GetComponentInParent<BaseComponent>());
         UpdateVisualHeatmap();
@@ -244,6 +256,9 @@ public abstract class BaseComponent : MonoBehaviour
         }
     }
   
+  /*
+  überträgt die Position der Anchor für die speicherung in eine Position als String ausgegeben
+  */
     public string ReadAnchorPosition(Transform checkAnchor)
     {
         if (checkAnchor == anchorFront.transform) return "front";
@@ -256,6 +271,9 @@ public abstract class BaseComponent : MonoBehaviour
         return null;
     }
 
+    /*
+    liest aus der positinsbeschreibung den richtigen Anchor aus und gibt diesen zurück
+    */
     public Transform GetAnchorByPosition(string position)
     {
         switch (position)
@@ -276,6 +294,9 @@ public abstract class BaseComponent : MonoBehaviour
         }
         return null;
     }
+    /*
+    liest die InformationNode
+    */
     public string ReadInformationNode(int infoNummer)
     {
         if(infoNode == null)
@@ -294,7 +315,7 @@ public abstract class BaseComponent : MonoBehaviour
         return infoNode.BuildText();
     }
     
-    //updated auch den namen...
+    //updated die InfoNode
     public void UpdateInfoNode(string name, string responability, string description)
     {
         frontText.text = name;
@@ -350,6 +371,9 @@ public abstract class BaseComponent : MonoBehaviour
         }
         
     }
+    /*
+    Ruft den UMLManager um die Metadaten im Display darzustellen
+    */
     public void CallDadToDoTheWork()
     {
         //Debug.Log("called Dad");

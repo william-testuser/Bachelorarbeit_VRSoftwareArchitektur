@@ -26,15 +26,17 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
     public TextMeshProUGUI frontText => _frontText;
     private int count = 0;
 
-    //public last Component entered 
-    
+    /*
+    eine Interact methode für verschieden Szenarien, wurde in dieser itereation nur fürs Spawnern benutzt
+    spawnt das jeweilige Prefab der Komponente je Depthlevel
+    */    
     public void Interact()
     {
       //je nach LAyer inder man sich befindet, einenandere komponenete spawnen.
        SpawnPrefab(depthLevel);
         
     }
-    // Die Signatur muss zum Event-System des XRI passen
+    // speichert das aktuell im peronal UI anzusehende objekt/ das zu bearbeitende Objekt
     public void SetParentBasecomponent(BaseComponent newBase)
     {
         if(newBase != null) insertIntoThisBasecomponent = newBase;
@@ -53,6 +55,11 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
         Debug.Log($"Player ist jetzt in Tiefe: {depthLevel}");
     }
 
+/*
+Spawnt die unterscheidlichen Komponenten je übergebenen integer Wert
+setzt deren initiale positin immer gleich oder mittig im Parentobjekt und passt deren größe je nach tiefenlevel an.
+initialisiert diese danach dann
+*/
     public void SpawnPrefab(int componente)
     {
         //Debug.Log("spawned executed");
@@ -118,6 +125,9 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
 
     }
 
+    /*
+    hilfmethode für das Laden aus der JSOnlatei. ertsellt das klassiche prefab
+    */
     public BaseComponent SpawnPrefab()
     {
         GameObject initObject = null;
@@ -127,6 +137,8 @@ public class ToolboxLogik : MonoBehaviour //,IInteractable
         baseComponent.Initiate();
         return baseComponent;
     }
+
+    //hilfmethode für dem Test, spannt ein kindoBjekt ins übergebene Objekt
     public BaseComponent SpawnPrefab(BaseComponent newParent)
     {
         if(newParent != null)

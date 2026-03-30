@@ -25,7 +25,7 @@ public class Billboard : MonoBehaviour
         // Sucht die Hauptkamera (dein VR-Headset)
         camTransform = Camera.main.transform;
     }
-
+   
     private void InitialSettingOfCanvasDistance()
     {
         Vector3 worldScale = targetCube.lossyScale;
@@ -37,7 +37,9 @@ public class Billboard : MonoBehaviour
         // Positioniere die Canvas relativ zum Cube-Zentrum
         canvasTransform.position = targetCube.transform.position + new Vector3(0, distanceTop + offset, 0);
     }
+
     // LateUpdate wird nach allen anderen Bewegungen aufgerufen
+    //und setzt den Text zwischen Kamera des Players und der Objectmitte
     void LateUpdate()
     {
         if (targetCube == null) return;
